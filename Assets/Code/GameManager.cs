@@ -14,6 +14,8 @@ public class GameManager : MonoBehaviour
     [HideInInspector] public Dictionary<GameObject, BlockNode> blocks_in_down = new Dictionary<GameObject, BlockNode>();
 
 
+    [SerializeField] private GameObject diff_progres;
+
     [SerializeField] private GameObject ParticleSwop;
     [SerializeField] private GameObject ParticleBoom;
     [SerializeField] private GameObject ParticleOk;
@@ -142,7 +144,11 @@ public class GameManager : MonoBehaviour
     private void CaclDifficult()
     {
 
-        float k = ((float)(math.min(math.max(score_diff, 0), max_score))) / (float)max_score;
+        score_diff = math.min(math.max(score_diff, 0), max_score);
+
+        float k = ((float)(score_diff)) / (float)max_score;
+
+        diff_progres.transform.localScale = new Vector3(k, diff_progres.transform.localScale.y, diff_progres.transform.localScale.z);
 
         _gravity = (max_gravity - min_gravity) * k + min_gravity;
 
