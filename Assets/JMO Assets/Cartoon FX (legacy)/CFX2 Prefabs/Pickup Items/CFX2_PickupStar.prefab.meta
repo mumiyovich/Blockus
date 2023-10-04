@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 8fc06027b01064e4f885fd8dd2929310
+labels:
+- cartoonfx
+- particles
+- pickup
+- symbol
+- toon
+AssetOrigin:
+  serializedVersion: 1
+  productId: 109565
+  packageName: Cartoon FX Remaster Free
+  packageVersion: R 1.0.6
+  assetPath: Assets/JMO Assets/Cartoon FX (legacy)/CFX2 Prefabs/Pickup Items/CFX2_PickupStar.prefab
+  uploadId: 603383

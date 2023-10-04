@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 83cd9cc9f9c88824ba18dc59b05ae328
+labels:
+- CartoonFX
+- Toon
+- Particles
+- Hit
+NativeFormatImporter:
+  userData: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 109565
+  packageName: Cartoon FX Remaster Free
+  packageVersion: R 1.0.6
+  assetPath: Assets/JMO Assets/Cartoon FX (legacy)/CFX3 Prefabs/Misc/CFX3_Hit_SmokePuff.prefab
+  uploadId: 603383

@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: f89732ea99785b94c87bbba1e27f75a3
+labels:
+- CartoonFX
+- Toon
+- Particles
+- Air
+- Fire
+NativeFormatImporter:
+  userData: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 109565
+  packageName: Cartoon FX Remaster Free
+  packageVersion: R 1.0.6
+  assetPath: Assets/JMO Assets/Cartoon FX (legacy)/CFX3 Prefabs/Fire/CFX3_Flying_Ember_Upward.prefab
+  uploadId: 603383

@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 77ec3c4e07a36814fb3169ecef41b50a
+labels:
+- ball
+- bubble
+- cartoonfx
+- electric
+- particles
+- toon
+AssetOrigin:
+  serializedVersion: 1
+  productId: 109565
+  packageName: Cartoon FX Remaster Free
+  packageVersion: R 1.0.6
+  assetPath: Assets/JMO Assets/Cartoon FX (legacy)/CFX Prefabs/Electric/CFX_ElectricityBall.prefab
+  uploadId: 603383

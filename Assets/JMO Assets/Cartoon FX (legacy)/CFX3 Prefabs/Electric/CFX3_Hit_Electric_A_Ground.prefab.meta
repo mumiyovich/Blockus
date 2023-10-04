@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 1ca16f2a31fb6a548ad8954bed1d321f
+labels:
+- CartoonFX
+- Toon
+- Particles
+- Hit
+- Electric
+- Ground
+NativeFormatImporter:
+  userData: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 109565
+  packageName: Cartoon FX Remaster Free
+  packageVersion: R 1.0.6
+  assetPath: Assets/JMO Assets/Cartoon FX (legacy)/CFX3 Prefabs/Electric/CFX3_Hit_Electric_A_Ground.prefab
+  uploadId: 603383

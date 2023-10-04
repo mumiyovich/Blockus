@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: de07bf378e7247444a0715ad2ff509e3
+labels:
+- CartoonFX
+- Toon
+- Particles
+- Snow
+NativeFormatImporter:
+  userData: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 109565
+  packageName: Cartoon FX Remaster Free
+  packageVersion: R 1.0.6
+  assetPath: Assets/JMO Assets/Cartoon FX (legacy)/CFX3 Prefabs/Environment/CFX3_Snow_Dense.prefab
+  uploadId: 603383

@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 757df604761b8ef42831192c70ee1099
+labels:
+- CartoonFX
+- Toon
+- Particles
+NativeFormatImporter:
+  userData: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 109565
+  packageName: Cartoon FX Remaster Free
+  packageVersion: R 1.0.6
+  assetPath: Assets/JMO Assets/Cartoon FX (legacy)/CFX3 Prefabs/Light/CFX3_Hit_Light_C_Air.prefab
+  uploadId: 603383

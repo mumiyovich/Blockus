@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 4961a16ba01e09547be3e1c9d16d5ad0
+timeCreated: 1506673851
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 109565
+  packageName: Cartoon FX Remaster Free
+  packageVersion: R 1.0.6
+  assetPath: Assets/JMO Assets/Cartoon FX (legacy)/CFX2 Prefabs/Electric/CFX2_SparksHit_B
+    Sphere.prefab
+  uploadId: 603383
