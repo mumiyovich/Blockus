@@ -47,9 +47,6 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private GameObject score_point;
 
-
-
-
     [SerializeField] private GameObject AllObgects;
 
     [SerializeField] private float start_y_block;
@@ -100,7 +97,7 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
-        Application.targetFrameRate = 500;// 60;
+        Application.targetFrameRate = 60;// 60;
        //QualitySettings.vSyncCount = 0;
     }
 
