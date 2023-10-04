@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Mathematics;
@@ -13,6 +14,8 @@ public class BlockNode : MonoBehaviour
     public int type = 0;
 
     public bool collected = false;
+
+    [HideInInspector] public GameManager _gm;
 
 
     public GameObject down_panel;
@@ -40,6 +43,16 @@ public class BlockNode : MonoBehaviour
     private Material currentMat;
 
     private float scale = 0;
+
+    private void OnDestroy()
+    {
+
+        if (_gm.blocks_in_down.ContainsKey(gameObject) == true)
+        {
+            _gm.blocks_in_down.Remove(gameObject);
+        }
+
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -100,7 +113,26 @@ public class BlockNode : MonoBehaviour
     void Update()
     {
 
-        if(scale!=1)
+
+
+        float dist_to_panel = transform.position.y - down_panel.transform.position.y;
+        if(dist_to_panel < 1.3f)
+        {
+            if (_gm.blocks_in_down.ContainsKey(gameObject) == false)
+            {
+                _gm.blocks_in_down.Add(gameObject, this);
+            }
+        }
+        else
+        {
+            if (_gm.blocks_in_down.ContainsKey(gameObject) == true)
+            {
+                _gm.blocks_in_down.Remove(gameObject);
+            }
+        }
+
+
+        if (scale!=1)
         {
             scale += Time.deltaTime * 1.5f;// 3.0f;
 

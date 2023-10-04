@@ -25,7 +25,7 @@ public class BackPanel : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        int move_count = 1;
+       // int move_count = 1;
 
         num_move = 1;
 

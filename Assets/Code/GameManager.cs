@@ -11,6 +11,9 @@ using UnityEngine.UIElements;
 
 public class GameManager : MonoBehaviour
 {
+    [HideInInspector] public Dictionary<GameObject, BlockNode> blocks_in_down = new Dictionary<GameObject, BlockNode>();
+
+
     [SerializeField] private GameObject ParticleSwop;
     [SerializeField] private GameObject ParticleBoom;
     [SerializeField] private GameObject ParticleOk;
@@ -51,7 +54,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private float start_y_block;
     [SerializeField] private float first_x_block;
     [SerializeField] private float last_x_block;
-    [SerializeField] private int count_x_block;
+    [SerializeField] public int count_x_block;
     [SerializeField] private int leven_num = 0;
 
     [SerializeField]
@@ -69,6 +72,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] private int lives;
     private int score=0;
     private int draw_score = 0;
+
+    private int score_diff = 0;
 
     private float[] x_lines;
 
@@ -139,7 +144,7 @@ public class GameManager : MonoBehaviour
     private void CaclDifficult()
     {
 
-        float k = ((float)(math.min(math.max(score, 0), max_score))) / (float)max_score;
+        float k = ((float)(math.min(math.max(score_diff, 0), max_score))) / (float)max_score;
 
         _gravity = (max_gravity - min_gravity) * k + min_gravity;
 
@@ -234,14 +239,54 @@ public class GameManager : MonoBehaviour
 
         }
 
-        if(Input.GetMouseButtonDown(0))
+        if(Input.GetMouseButtonUp(0))
         {
             CheckTap();
         }
 
-        
+        if(blocks_in_down.Count ==  count_x_block)
+        {
+            CheckBonusBlockInDown();
+        }
 
 
+    }
+
+    void CheckBonusBlockInDown()
+    {
+        Dictionary<int,int> co = new Dictionary<int,int>();
+        foreach(KeyValuePair<GameObject, BlockNode> bl in blocks_in_down)
+        {
+            if (co.ContainsKey(bl.Value.type) == true)
+            {
+                co[bl.Value.type]++;
+            }
+            else
+            {
+                co.Add(bl.Value.type, 1);
+            }
+        }
+
+        if(co.Count == count_x_block)
+        {
+            foreach (KeyValuePair<GameObject, BlockNode> bl in blocks_in_down)
+            {
+                BlocksOk(bl.Key.transform, bl.Key.transform, true, 50);
+                bl.Value.collected = true;
+                Destroy(bl.Key);
+            }
+
+        }
+        else
+        if (co.Count == 1)
+        {
+            foreach (KeyValuePair<GameObject, BlockNode> bl in blocks_in_down)
+            {
+                BlocksOk(bl.Key.transform, bl.Key.transform, true, 200);
+                bl.Value.collected = true;
+                Destroy(bl.Key);
+            }
+        }
     }
 
     void PosDownPanel()
@@ -301,6 +346,8 @@ public class GameManager : MonoBehaviour
         b.transform.parent = AllObgects.transform;
 
         BlockNode blnod = b.GetComponent<BlockNode>();
+
+        blnod._gm = this;
 
         blnod.down_panel = down_panel;
 
@@ -375,7 +422,7 @@ public class GameManager : MonoBehaviour
 
     }
 
-    public void BlocksOk(Transform t1, Transform t2, bool ok)
+    public void BlocksOk(Transform t1, Transform t2, bool ok, int bonus = 0)
     {
 
         Vector3 v = new Vector3((t1.position.x + t2.position.x) * 0.5f, (t1.position.y + t2.position.y) * 0.5f, (t1.position.z + t2.position.z) * 0.5f);
@@ -389,7 +436,13 @@ public class GameManager : MonoBehaviour
 
             cur_cror_add = math.max(1, (int)score_add);
 
-            StartScorePoint(cur_cror_add, v,Color.green);
+            if (bonus == 0.0f)
+            {
+                StartScorePoint(cur_cror_add, v, Color.green);
+            }else
+            {
+                StartScorePoint(bonus, v, Color.green);
+            }
 
             DrawOk(t1, t2);
         }
@@ -399,12 +452,28 @@ public class GameManager : MonoBehaviour
 
             cur_cror_add = math.min(-1, (int)score_add);
 
-            StartScorePoint(cur_cror_add, v, Color.red);
+            if (bonus == 0.0f)
+            {
+                StartScorePoint(cur_cror_add, v, Color.red);
+            }
+            else
+            {
+                StartScorePoint(bonus, v, Color.red);
+            }
 
-            DrawBoom(t1,t2);
+                DrawBoom(t1,t2);
         }
 
-        score += cur_cror_add;
+            if (bonus == 0.0f)
+            {
+                score += cur_cror_add;
+            } else
+            {
+                score += bonus;
+            }
+                
+
+        score_diff += cur_cror_add;
 
         CaclDifficult();
 
