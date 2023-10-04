@@ -33,6 +33,7 @@ public class GameManager : MonoBehaviour
     {
         public List<GameObject> blocks;
     }
+
     [SerializeField] private List<Blocks_level> blocks_level;
 
     [SerializeField] private GameObject block;
