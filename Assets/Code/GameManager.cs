@@ -18,23 +18,36 @@ using static UnityEngine.GraphicsBuffer;
 
 public class GameManager : MonoBehaviour
 {
+    private bool start = true;
+    private float _cam_sh = 0;
+    private float _k_cam = 0.1f;
+    private int score = 0;
+    private int draw_score = 0;
+    private int score_diff = 0;
+    private float[] x_lines;
+    private float sec_scor_add_end = 1.0f;
+    private bool is_paused = false;
+    private bool first = true;
+
+
     [HideInInspector] public Dictionary<GameObject, BlockNode> blocks_in_down = new Dictionary<GameObject, BlockNode>();
 
 
-    [SerializeField] private GameObject diff_progres;
 
+    [Header("Particles")]
     [SerializeField] private GameObject ParticleSwop;
     [SerializeField] private GameObject ParticleBoom;
     [SerializeField] private GameObject ParticleOk;
 
-    [SerializeField] private GameObject PanelPause;
 
+    [Header("Objects:")]
+    [SerializeField] private GameObject PanelPause;
     [SerializeField] private GameObject down_panel;
     [SerializeField] private GameObject StartSceneX;
-    private bool start = true;
-
-    private float _cam_sh = 0;
-    private float _k_cam = 0.1f;
+    [SerializeField] private GameObject block;
+    [SerializeField] private GameObject score_point;
+    [SerializeField] private GameObject AllObgects;
+    [SerializeField] private GameObject SolidBlock;
 
 
     [System.Serializable]
@@ -43,65 +56,41 @@ public class GameManager : MonoBehaviour
         public List<GameObject> blocks;
     }
 
+    [Header("Objects blocks:")]
     [SerializeField] private List<Blocks_level> blocks_level;
 
-    [SerializeField] private GameObject block;
 
-
-
-
+    [Header("Texts:")]
     [SerializeField] private TextMeshProUGUI tekst_sc;
-
     [SerializeField] private TextMeshProUGUI tekst_score;
 
-    [SerializeField] private GameObject score_point;
 
-    [SerializeField] private GameObject AllObgects;
 
+
+    [Header("Blocks params:")]
     [SerializeField] private float start_y_block;
     [SerializeField] private float first_x_block;
     [SerializeField] private float last_x_block;
     [SerializeField] public int count_x_block;
+
+
+    [Header("Difficult:")]
+    [SerializeField] private GameObject diff_progres;
     [SerializeField] private int leven_num = 0;
-
-    [SerializeField]
-    private float min_gravity;
-
-    [SerializeField]
-    private float max_gravity;
-
+    [SerializeField] private float min_gravity;
+    [SerializeField] private float max_gravity;
     [SerializeField] private float _gravity;
-
-
-
     [SerializeField] private int priz_var;
-
+    [SerializeField] private int solid_var;
     [SerializeField] private int lives;
-    private int score = 0;
-    private int draw_score = 0;
-
-    private int score_diff = 0;
-
-    private float[] x_lines;
-
-    [SerializeField]
-    private float min_time_new_block;
-    [SerializeField]
-    private float max_time_new_block;
+    [SerializeField] private float min_time_new_block;
+    [SerializeField] private float max_time_new_block;
     [SerializeField] private float time_new_block;
-
-    [SerializeField]
-    private int max_score;
-
-
+    [SerializeField] private int max_score;
     [SerializeField] private float score_speed;
-    private float score_add = 0;//!
+    [SerializeField] private float score_add = 0;//!
 
-    private float sec_scor_add_end = 1.0f;
 
-    private bool is_paused = false;
-
-    private bool first = true;
 
 
     private void Awake()
@@ -343,6 +332,10 @@ public class GameManager : MonoBehaviour
 
     void ÑreateBlock()
     {
+        if (AllObgects.transform.childCount >= count_x_block*10)
+        {
+            return;
+        }
 
         int idbl = leven_num % blocks_level.Count;
 
@@ -351,7 +344,12 @@ public class GameManager : MonoBehaviour
         int idb = UnityEngine.Random.Range(0, m.Count);
 
 
+        /*
         int ipriz = UnityEngine.Random.Range(0, priz_var);
+        int isolid = UnityEngine.Random.Range(0, solid_var);
+        */
+        bool ipriz = PiRND.GetProbability("priz", priz_var);
+        bool isolid = PiRND.GetProbability("solid", solid_var);
 
 
         GameObject b = Instantiate(block) as GameObject;
@@ -368,16 +366,22 @@ public class GameManager : MonoBehaviour
         blnod.meshes = mt.gameObject;
 
 
-        if (ipriz == 0)
+        if (ipriz)
         {
             foreach (GameObject mesh in m)
             {
                 (Instantiate(mesh) as GameObject).transform.parent = mt;
             }
+            //(Instantiate(SolidBlock) as GameObject).transform.parent = mt;
 
             blnod.type = -1;
 
             blnod.ParticlePriz.SetActive(true);
+        }
+        else if(isolid)
+        {
+            (Instantiate(SolidBlock) as GameObject).transform.parent = mt;
+            blnod.type = -2;
         }
         else
         {
@@ -461,9 +465,14 @@ public class GameManager : MonoBehaviour
         }
         else
         {
+            if (score_add > 0)
+            {
+                score_add *= 0.5f;
+            }
             score_add -= score_speed;
 
             cur_cror_add = math.min(-1, (int)score_add);
+
 
             if (bonus == 0.0f)
             {
@@ -578,6 +587,9 @@ public class GameManager : MonoBehaviour
     {
         Vector3 p = MouseToScren();
 
+        if (start_y_block - p.y < 0.5f)
+            return;
+
         Transform tl = null;
         Transform tr = null;
         float y, x;
@@ -615,7 +627,7 @@ public class GameManager : MonoBehaviour
                 else
                 {
                     dist2 = Vector2.Distance(new Vector2(tr.position.x, tr.position.y), new Vector2(p.x, p.y));
-                    if(dist1< dist2)
+                    if (dist1 < dist2)
                         tr = child;
 
                     /*
@@ -732,113 +744,103 @@ public class GameManager : MonoBehaviour
         DrawSwap(tl, tr, x_lines[nx]);
 
     }
-
-    private void _CheckTap()
-    {
-
-        /*
-        Camera cam = Camera.main;
-        Vector3 p = new Vector3();
-        Vector3 mousePos = new Vector3();
-        mousePos.x = Input.mousePosition.x;
-        mousePos.y = Input.mousePosition.y;
-        mousePos.z = -cam.transform.position.z;
-
-        p = cam.ScreenToWorldPoint(mousePos);
-        */
-
-        Vector3 p = MouseToScren();
-
-
-        int nx = -1;
-
-        for (int i = 0; i < (count_x_block - 1); i++)
+    /*
+        private void _CheckTap()
         {
-            if (p.x >= x_lines[i] && p.x < x_lines[i + 1])
+
+
+            Vector3 p = MouseToScren();
+
+
+            int nx = -1;
+
+            for (int i = 0; i < (count_x_block - 1); i++)
             {
-                nx = i;
-                break;
-            }
-        }
-
-        if (nx == -1)
-        {
-            return;
-        }
-
-
-        Transform t1 = null;
-        Transform t2 = null;
-
-        foreach (Transform child in AllObgects.transform)
-        {
-            float x = child.position.x - x_lines[nx];
-            float y = child.position.y - p.y;
-
-            if (x * x + y * y <= 0.5f * 0.5f)
-            {
-                t1 = child;
-            }
-
-
-            x = child.position.x - x_lines[nx + 1];
-            y = child.position.y - p.y;
-
-            if (x * x + y * y <= 0.5f * 0.5f)
-            {
-                t2 = child;
-            }
-
-            if (t1 != null && t2 != null)
-            {
-                break;
-            }
-
-        }
-
-        if (t1 != null)
-        {
-            t1.position = new Vector3(x_lines[nx + 1], t1.position.y, t1.position.z);
-
-            if (t2 == null)
-            {
-                t2 = Collided(t1);
-                if (t2 != null)
+                if (p.x >= x_lines[i] && p.x < x_lines[i + 1])
                 {
-                    t2.position = new Vector3(x_lines[nx], t2.position.y, t2.position.z);
-                    t2 = null;
+                    nx = i;
+                    break;
                 }
             }
-        }
 
-
-
-
-
-        if (t2 != null)
-        {
-            t2.position = new Vector3(x_lines[nx], t2.position.y, t2.position.z);
-
-            if (t1 == null)
+            if (nx == -1)
             {
-                t1 = Collided(t2);
-                if (t1 != null)
+                return;
+            }
+
+
+            Transform t1 = null;
+            Transform t2 = null;
+
+            foreach (Transform child in AllObgects.transform)
+            {
+                float x = child.position.x - x_lines[nx];
+                float y = child.position.y - p.y;
+
+                if (x * x + y * y <= 0.5f * 0.5f)
                 {
-                    t1.position = new Vector3(x_lines[nx + 1], t1.position.y, t1.position.z);
-                    t1 = null;
+                    t1 = child;
+                }
+
+
+                x = child.position.x - x_lines[nx + 1];
+                y = child.position.y - p.y;
+
+                if (x * x + y * y <= 0.5f * 0.5f)
+                {
+                    t2 = child;
+                }
+
+                if (t1 != null && t2 != null)
+                {
+                    break;
+                }
+
+            }
+
+            if (t1 != null)
+            {
+                t1.position = new Vector3(x_lines[nx + 1], t1.position.y, t1.position.z);
+
+                if (t2 == null)
+                {
+                    t2 = Collided(t1);
+                    if (t2 != null)
+                    {
+                        t2.position = new Vector3(x_lines[nx], t2.position.y, t2.position.z);
+                        t2 = null;
+                    }
                 }
             }
+
+
+
+
+
+            if (t2 != null)
+            {
+                t2.position = new Vector3(x_lines[nx], t2.position.y, t2.position.z);
+
+                if (t1 == null)
+                {
+                    t1 = Collided(t2);
+                    if (t1 != null)
+                    {
+                        t1.position = new Vector3(x_lines[nx + 1], t1.position.y, t1.position.z);
+                        t1 = null;
+                    }
+                }
+            }
+
+
+
+            if (t1 != null || t2 != null)
+            {
+                DrawSwap(t1, t2, (x_lines[nx + 1] + x_lines[nx]) * 0.5f);
+            }
+
         }
-
-
-
-        if (t1 != null || t2 != null)
-        {
-            DrawSwap(t1, t2, (x_lines[nx + 1] + x_lines[nx]) * 0.5f);
-        }
-
-    }
-
+    */
     private void DrawSwap(Transform t1, Transform t2, float x)
     {
         float y;
@@ -916,5 +918,52 @@ public class GameManager : MonoBehaviour
         PanelPause.SetActive(false);
     }
 
+
+}
+
+
+public static class PiRND
+{
+    private static Dictionary<object,int> _probability = new Dictionary<object,int>();
+
+    public static void Clear()
+    {
+        _probability.Clear();
+    }
+    
+    public static bool GetProbability(object Key, int Probability, int MinProbability=0 , int MaxProbability=0)
+    {
+        if (MinProbability == 0)
+            MinProbability = Probability / 2;
+        if (MaxProbability == 0)
+            MaxProbability = Probability + Probability / 2;
+
+        if (_probability.ContainsKey(Key) == false)
+            _probability.Add(Key, 0);
+
+        int count = ++_probability[Key];
+
+        if (count < MinProbability)
+        {
+            _probability[Key] = count;
+            return false;
+        }
+
+        if (count > MaxProbability)
+        {
+            _probability[Key] = 0;
+            return true;
+        }
+
+        int ok = UnityEngine.Random.Range(0, Probability);
+
+        if (ok == 0)
+        {
+            _probability[Key] = 0;
+            return true;
+        }
+
+        return false;
+    }
 
 }

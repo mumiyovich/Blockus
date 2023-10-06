@@ -44,6 +44,8 @@ public class BlockNode : MonoBehaviour
 
     private float scale = 0;
 
+   
+
     private void OnDestroy()
     {
 
@@ -57,6 +59,7 @@ public class BlockNode : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+
         transform.localScale = new Vector3(0, 0, 0);
 
         scale = 0;
@@ -192,8 +195,6 @@ public class BlockNode : MonoBehaviour
     }
 
     private void OnCollisionEnter(Collision other)//collision)
-
-    //private void OnTriggerEnter(Collider other)
     {
         // Debug.Log("zzzz "+other);
 
@@ -206,7 +207,6 @@ public class BlockNode : MonoBehaviour
 
         if (other_b == null)
         {
-            //Debug.Log(rb.velocity.y);
             if (rb.velocity.y < took_velocity && time_toock == 0.0f)
             {
                 toock.Play();
@@ -221,18 +221,19 @@ public class BlockNode : MonoBehaviour
             return;
         }
 
-        //Debug.Log(gameObject.name);
-        //Debug.Log(other.gameObject.name);
+        if ((type == -2 || other_b.type == -2)&&(type != -1 && other_b.type != -1))
+        {
+            return;
+        }
 
-        GameManager gm = FindFirstObjectByType<GameManager>();
 
         if (type == other_b.type || type == -1 || other_b.type==-1)
         {
-            gm.BlocksOk(transform, other_b.transform, true);
+            _gm.BlocksOk(transform, other_b.transform, true);
         }
         else
         {
-            gm.BlocksOk(transform, other_b.transform, false);
+            _gm.BlocksOk(transform, other_b.transform, false);
         }
 
         collected = true;
