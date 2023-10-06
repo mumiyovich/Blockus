@@ -1,5 +1,5 @@
 ﻿Cartoon FX Remaster FREE, version R 1.0
-2023/07/26
+2023/09/04
 © 2012-2023 - Jean Moreno
 =======================================
 
@@ -78,6 +78,9 @@ I'd be happy to see any effects used in your project, so feel free to drop me a 
 
 RELEASE NOTES
 -------------
+
+R 1.0.7
+- Distortion effects now work with URP 2D Renderer
 
 R 1.0.6
 - Fixed possible shader compilation error when Single-pass instanced rendering is enabled

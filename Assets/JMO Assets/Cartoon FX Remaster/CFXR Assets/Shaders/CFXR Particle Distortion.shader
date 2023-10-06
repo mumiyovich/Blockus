@@ -115,6 +115,7 @@ Shader "Cartoon FX/Remaster/Particle Screen Distortion"
 				#pragma shader_feature_local _ _ALPHATEST_ON
 				#pragma shader_feature_local _ _DEBUG_VISUALIZE_DISTORTION
 
+				#define _CameraOpaqueTexture _CameraSortingLayerTexture
 				#define CFXR_URP
 				#define DISABLE_SOFT_PARTICLES
 				#define CFXR_SCREEN_DISTORTION_SHADER
