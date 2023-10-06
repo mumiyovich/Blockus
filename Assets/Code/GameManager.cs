@@ -144,26 +144,32 @@ public class GameManager : MonoBehaviour
 
         float k = ((float)(score_diff)) / (float)max_score;
 
+        /*
+        Color diff_co;
+        Color diff_co1 = new Color(0, 0.8051351f, 0.8392157f);
+        Color diff_co2 = new Color(0.8310356f, 0.8396226f, 0);
+        Color diff_co3 = new Color(0.6792453f, 0.1765224f, 0);
+
+
+
+        if(k<0.5f)
+        {
+            diff_co = Color.Lerp(diff_co1, diff_co2, k * 2.0f - 1.0f);
+        }
+        else
+        {
+            diff_co = Color.Lerp(diff_co2, diff_co3, k * 2.0f);
+        }
+
+        diff_progres.GetComponent<UnityEngine.UI.Image>().color = diff_co;
+        */
+
         diff_progres.transform.localScale = new Vector3(k, diff_progres.transform.localScale.y, diff_progres.transform.localScale.z);
 
         _gravity = (max_gravity - min_gravity) * k + min_gravity;
 
 
         time_new_block = (max_time_new_block - min_time_new_block) * (1.0f - k) + min_time_new_block;
-
-        /*
-    max_score
-
-    score
-
-    min_gravity;
-    max_gravity;
-    gravity
-
-    min_time_new_block;
-    max_time_new_block;
-    time_new_block;
-    */
 
 
         Physics.gravity = new Vector3(0, -_gravity, 0);
@@ -415,26 +421,6 @@ public class GameManager : MonoBehaviour
         v.x = x_lines[ix];
         v.y = start_y_block;
         b.transform.position = v;
-
-
-
-
-
-
-
-
-
-        //     b.GetComponent<Rigidbody>().velocity = new Vector3(0, -1.0F, 0);
-
-        //Debug.Log(ix);
-
-
-        /*
-        GameObject apl_p = Resources.Load<GameObject>("aple_02");// GameObject.Find("aple_02");
-        Debug.Log(apl_p);
-        GameObject apl = Instantiate(apl_p) as GameObject;
-        apl.transform.parent = apl_p.transform;
-        */
 
     }
 
