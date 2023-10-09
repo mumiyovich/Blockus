@@ -17,6 +17,8 @@ public class BlockNode : MonoBehaviour
 
     [HideInInspector] public GameManager _gm;
 
+    [SerializeField] private float height_bonus_line;
+
 
     public GameObject down_panel;
     public GameObject meshes;
@@ -74,43 +76,6 @@ public class BlockNode : MonoBehaviour
         //ChangeAlpha(0.1f);
     }
 
-   /*
-    void ChangeAlpha(float alphaVal)
-    {
-
-        Renderer renderer = meshes.transform.GetChild(0).gameObject.GetComponent<Renderer>();
-
-        
-        
-
-       // Renderer renderer = GameObject.Find("back_02").GetComponent<Renderer>();
-
-
-        Color oldColor = renderer.material.color; //currentMat.color;
-        Color newColor = new Color(oldColor.r, oldColor.g, oldColor.b, alphaVal);
-        //currentMat.SetColor("_Color", newColor);
-
-        //meshes.GetComponent<Renderer>().material.shader = Shader.Find("Transparent/Diffuse");
-
-        renderer.material.color = newColor;
-
-        renderer.material.SetFloat("_Surface", (float)1);
-        renderer.material.SetFloat("_Blend", (float)0);
-        renderer.material.SetOverrideTag("RenderType", "Transparent");
-        renderer.material.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
-        renderer.material.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
-        renderer.material.SetInt("_ZWrite", 0);
-        renderer.material.DisableKeyword("_ALPHAPREMULTIPLY_ON");
-        renderer.material.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Transparent;
-    //    renderer.material.SetShaderPassEnabled("ShadowCaster", false);
-        
-
-
-
-    }
-   */
-
-
     float priz_cur_time = 0;
     // Update is called once per frame
     void Update()
@@ -118,8 +83,8 @@ public class BlockNode : MonoBehaviour
 
 
 
-        float dist_to_panel = transform.position.y - down_panel.transform.position.y;
-        if(dist_to_panel < 1.3f)
+        float dist_to_panel = transform.position.y - (down_panel.transform.position.y + _gm.down_panel_height);
+        if(dist_to_panel < height_bonus_line * _gm.scale_block)
         {
             if (_gm.blocks_in_down.ContainsKey(gameObject) == false)
             {
@@ -141,7 +106,7 @@ public class BlockNode : MonoBehaviour
 
             scale = math.min(scale, 1.0f);
 
-            float s = 1.0f - (1.0f - scale) * (1.0f - scale) * (1.0f - scale);
+            float s = (1.0f - (1.0f - scale) * (1.0f - scale) * (1.0f - scale)) * _gm.scale_block;
             transform.localScale = new Vector3(s, s, s);
 
         }
