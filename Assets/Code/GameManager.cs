@@ -9,6 +9,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SocialPlatforms.Impl;
 using UnityEngine.UIElements;
+using UnityEngine.XR;
 using static UnityEngine.GraphicsBuffer;
 
 
@@ -29,6 +30,11 @@ public class GameManager : MonoBehaviour
     private bool is_paused = false;
     private bool first = true;
 
+    [HideInInspector] public float scale_block =1;
+
+
+    private BackPanel backPanel;
+
 
     [HideInInspector] public Dictionary<GameObject, BlockNode> blocks_in_down = new Dictionary<GameObject, BlockNode>();
 
@@ -48,6 +54,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject score_point;
     [SerializeField] private GameObject AllObgects;
     [SerializeField] private GameObject SolidBlock;
+    [SerializeField] private GameObject Back_Panel;
 
 
     [System.Serializable]
@@ -71,7 +78,27 @@ public class GameManager : MonoBehaviour
     [SerializeField] private float start_y_block;
     [SerializeField] private float first_x_block;
     [SerializeField] private float last_x_block;
-    [SerializeField] public int count_x_block;
+    [SerializeField] public float down_panel_height;
+    [SerializeField] public float height_down_line;
+    private float st_first_x_block;
+    private float st_last_x_block;
+
+    //[SerializeField] public int count_x_block;
+    [SerializeField] private int _count_x_block;
+    public int count_x_block
+    {
+        get { return _count_x_block; }
+        set
+        {
+            if (_count_x_block != value)
+            {
+                AllOk();
+                AllOk();
+                _count_x_block = value;
+                InitXLines();
+            }
+        }
+    }
 
 
     [Header("Difficult:")]
@@ -97,6 +124,11 @@ public class GameManager : MonoBehaviour
     {
         Application.targetFrameRate = 500;// 60;
                                           //QualitySettings.vSyncCount = 0;
+
+        st_first_x_block = first_x_block;
+        st_last_x_block = last_x_block;
+
+        backPanel = Back_Panel.GetComponent<BackPanel>();
     }
 
 
@@ -111,29 +143,27 @@ public class GameManager : MonoBehaviour
         _cam_sh = 0;
         _k_cam = 0.25f;
 
-        x_lines = new float[count_x_block];
+        InitXLines();
 
+        DrawScore();
+        CaclDifficult();
+
+    }
+
+    void InitXLines()
+    {
+
+        scale_block = 5.0f / (float)count_x_block;
+        float ofx = (1.0f - scale_block) * 0.5f;
+        first_x_block = st_first_x_block - ofx;
+        last_x_block = st_last_x_block + ofx;
+        
+
+        x_lines = new float[count_x_block];
         for (int i = 0; i < count_x_block; i++)
         {
             x_lines[i] = first_x_block + ((last_x_block - first_x_block) / (float)(count_x_block - 1)) * (float)i;
         }
-
-        //Physics.gravity = new Vector3(0, -2.0F, 0);
-
-
-
-        DrawScore();
-
-        /*
-        GameObject apl_p = Resources.Load<GameObject>("aple_02");// GameObject.Find("aple_02");
-        Debug.Log(apl_p);
-        GameObject apl = Instantiate(apl_p) as GameObject;
-        apl.transform.parent = apl_p.transform;
-        */
-
-        //ÑreateBlock();
-
-        CaclDifficult();
 
     }
 
@@ -214,6 +244,8 @@ public class GameManager : MonoBehaviour
 
     }
 
+    float time_level_change = 0;
+
     void Update()
     {
 
@@ -252,6 +284,8 @@ public class GameManager : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             CheckTap();
+
+          //  backPanel.ChangeMesh();
         }
 
         if (blocks_in_down.Count == count_x_block)
@@ -259,6 +293,36 @@ public class GameManager : MonoBehaviour
             CheckBonusBlockInDown();
         }
 
+
+        if (Input.GetKeyUp(KeyCode.Q))
+        {
+            count_x_block--;
+        }
+        if (Input.GetKeyUp(KeyCode.W))
+        {
+            count_x_block++;
+        }
+
+
+        ///////!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        time_level_change += Time.deltaTime;
+        if(time_level_change >= 10)
+        {
+            time_level_change = 0;
+            backPanel.ChangeMesh();
+        }
+
+    }
+
+    void AllOk(int p_scor = 0)
+    {
+
+        foreach (Transform child in AllObgects.transform)
+        {
+            BlocksOk(child, child, true, p_scor);         
+            Destroy(child.gameObject);
+
+        }
 
     }
 
@@ -339,8 +403,15 @@ public class GameManager : MonoBehaviour
 
     }
 
+    //static bool tmp=false;
     void ÑreateBlock()
     {
+        /*
+        if (tmp)
+            return;
+        tmp = true;
+        //*/
+
         if (AllObgects.transform.childCount >= count_x_block*10)
         {
             return;
@@ -427,7 +498,7 @@ public class GameManager : MonoBehaviour
 
     }
 
-    public void BlocksOk(Transform t1, Transform t2, bool ok, int bonus = 0)
+    public void BlocksOk(Transform t1, Transform t2, bool ok, int bonus = -9999999)
     {
 
         Vector3 v = new Vector3((t1.position.x + t2.position.x) * 0.5f, (t1.position.y + t2.position.y) * 0.5f, (t1.position.z + t2.position.z) * 0.5f);
@@ -441,7 +512,7 @@ public class GameManager : MonoBehaviour
 
             cur_cror_add = math.max(1, (int)score_add);
 
-            if (bonus == 0.0f)
+            if (bonus == -9999999)
             {
                 StartScorePoint(cur_cror_add, v, Color.green);
             }
@@ -456,14 +527,15 @@ public class GameManager : MonoBehaviour
         {
             if (score_add > 0)
             {
-                score_add *= 0.5f;
+                //score_add *= 0.5f;
+                score_add = 0;
             }
             score_add -= score_speed;
 
             cur_cror_add = math.min(-1, (int)score_add);
 
 
-            if (bonus == 0.0f)
+            if (bonus == -9999999)
             {
                 StartScorePoint(cur_cror_add, v, Color.red);
             }
@@ -475,7 +547,7 @@ public class GameManager : MonoBehaviour
             DrawBoom(t1, t2);
         }
 
-        if (bonus == 0.0f)
+        if (bonus == -9999999)
         {
             score += cur_cror_add;
         }
@@ -496,6 +568,9 @@ public class GameManager : MonoBehaviour
 
     private void StartScorePoint(int n, Vector3 pos, Color color)
     {
+
+        if (n == 0)
+            return;
 
         GameObject mesh = Instantiate(score_point) as GameObject;
         mesh.transform.position = pos;
@@ -592,8 +667,20 @@ public class GameManager : MonoBehaviour
         float dist1;
         float dist2;
 
+        bool click_in_up = (p.y - (down_panel.transform.position.y + down_panel_height)) >= height_down_line *scale_block;
+
         foreach (Transform child in AllObgects.transform)
         {
+
+            if(click_in_up)
+            {
+                if(child.position.y - (down_panel.transform.position.y + down_panel_height) < height_down_line * scale_block)
+                {
+                    continue;
+                }
+            }
+
+           // float dist_to_panel = transform.position.y - down_panel.transform.position.y;
 
             /*
             y = child.position.y - p.y;
@@ -879,7 +966,7 @@ public class GameManager : MonoBehaviour
             {
                 if (t.position.x == child.position.x)
                 {
-                    if (((t.position.y - child.position.y) * (t.position.y - child.position.y)) < 1.0f)
+                    if (((t.position.y - child.position.y) * (t.position.y - child.position.y)) < scale_block * scale_block) // <1.0f
                     {
                         ret = child;
                         break;
@@ -907,6 +994,32 @@ public class GameManager : MonoBehaviour
         PanelPause.SetActive(false);
     }
 
+    public void ChangeAlpha(GameObject go, float alphaVal)
+    {
+
+        Renderer renderer = go.GetComponent<Renderer>();
+
+
+        Color oldColor = renderer.material.color;
+        Color newColor = new Color(oldColor.r, oldColor.g, oldColor.b, alphaVal);
+
+        renderer.material.color = newColor;
+
+        renderer.material.SetFloat("_Surface", (float)1);
+        renderer.material.SetFloat("_Blend", (float)0);
+        renderer.material.SetOverrideTag("RenderType", "Transparent");
+        renderer.material.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
+        renderer.material.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
+        renderer.material.SetInt("_ZWrite", 0);
+        renderer.material.DisableKeyword("_ALPHAPREMULTIPLY_ON");
+        renderer.material.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Transparent;
+        //renderer.material.SetShaderPassEnabled("ShadowCaster", false);
+
+
+
+
+    }
+
 
 }
 
@@ -922,6 +1035,9 @@ public static class PiRND
     
     public static bool GetProbability(object Key, int Probability, int MinProbability=0 , int MaxProbability=0)
     {
+        if(Probability==0)
+            return false;
+
         if (MinProbability == 0)
             MinProbability = Probability / 2;
         if (MaxProbability == 0)

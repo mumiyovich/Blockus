@@ -100,6 +100,7 @@ MonoBehaviour:
   type: 0
   collected: 0
   _gm: {fileID: 0}
+  height_bonus_line: 1.3
   down_panel: {fileID: 0}
   meshes: {fileID: 0}
   took_velocity: -0.2
