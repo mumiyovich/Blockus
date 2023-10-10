@@ -652,6 +652,12 @@ MonoBehaviour:
     - {fileID: 7863755063628559039, guid: 0cdc895ad29512e4cb28b0d4ec40433f, type: 3}
     - {fileID: 7752973034748853673, guid: 4c6195d45e4c6704eaa9530358fc4b24, type: 3}
     - {fileID: 779088449664687592, guid: 79bc931fe56389d4bbc6faa796798898, type: 3}
+  - blocks:
+    - {fileID: 7738561846903318358, guid: 11972b9361d80ff478b4e79d9193d704, type: 3}
+    - {fileID: 1584931186575051113, guid: 43bf36e9337db914ea30e967fa06fa00, type: 3}
+    - {fileID: 6384357869253325608, guid: 3c595e48c95a0fa46b1be0e50c8aa831, type: 3}
+    - {fileID: 7502188676135559921, guid: 2ab5a9f3e490d9844a2ecc468b8f2e9f, type: 3}
+    - {fileID: 624619473683325512, guid: fd05bbe0f57fe7e4ab5a6080dea7a040, type: 3}
   tekst_sc: {fileID: 163751524}
   tekst_score: {fileID: 1785387054}
   start_y_block: 6
@@ -661,7 +667,7 @@ MonoBehaviour:
   height_down_line: 1.5
   _count_x_block: 5
   diff_progres: {fileID: 377547239}
-  leven_num: 0
+  leven_num: 1
   min_gravity: 0.5
   max_gravity: 6
   _gravity: 0
