@@ -656,7 +656,7 @@ MonoBehaviour:
     - {fileID: 7738561846903318358, guid: 11972b9361d80ff478b4e79d9193d704, type: 3}
     - {fileID: 1584931186575051113, guid: 43bf36e9337db914ea30e967fa06fa00, type: 3}
     - {fileID: 6384357869253325608, guid: 3c595e48c95a0fa46b1be0e50c8aa831, type: 3}
-    - {fileID: 7502188676135559921, guid: 2ab5a9f3e490d9844a2ecc468b8f2e9f, type: 3}
+    - {fileID: 7365224090365731488, guid: 8edcb86ba5e690545bb902d4dd7fcb2f, type: 3}
     - {fileID: 624619473683325512, guid: fd05bbe0f57fe7e4ab5a6080dea7a040, type: 3}
   tekst_sc: {fileID: 163751524}
   tekst_score: {fileID: 1785387054}
