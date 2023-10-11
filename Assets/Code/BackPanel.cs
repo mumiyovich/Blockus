@@ -5,10 +5,12 @@ using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.VFX;
 using UnityEngine.XR;
+using static GameManager;
 
 public class BackPanel : MonoBehaviour
 {
-    private GameManager _gm = null;
+    [SerializeField] private List<GameObject> Backs;
+
 
     private Transform meshes = null;
 
@@ -18,16 +20,14 @@ public class BackPanel : MonoBehaviour
 
     private int num_move = 0;
 
-    private List<PiSinMoove> move_list = new List<PiSinMoove>();
+    [SerializeField] private List<PiSinMoove> move_list;// = new List<PiSinMoove>();
 
     private Dictionary<GameObject, Vector3> pos_list = new Dictionary<GameObject, Vector3>();
 
-
-
     private void Awake()
     {
-        _gm = GameObject.Find("GameManager").GetComponent<GameManager>();
-
+        //  _gm = GameObject.Find("GameManager").GetComponent<GameManager>();
+        //_gm = GameManager._gm;
         meshes = transform.Find("meshes");
     }
 
@@ -98,12 +98,12 @@ public class BackPanel : MonoBehaviour
         {
             if(panel1!=null)
             {
-                _gm.ChangeAlpha(panel1, 1.0f - t);
+                GameManager.ChangeAlpha(panel1, 1.0f - t);
             }
 
             if (panel2 != null)
             {
-                _gm.ChangeAlpha(panel2, t);
+                GameManager.ChangeAlpha(panel2, t);
             }
             t += Time.deltaTime;
 
@@ -112,13 +112,11 @@ public class BackPanel : MonoBehaviour
 
         panel1?.SetActive(false);
         panel1 = null;
-        _gm.ChangeAlpha(panel2, 1.0f);
+        GameManager.ChangeAlpha(panel2, 1.0f);
 
         yield break;
     }
 
-    // Update is called once per frame
-    // private void FixedUpdate()
     void Update()
     {
         
@@ -138,42 +136,39 @@ public class BackPanel : MonoBehaviour
             panel2.transform.position = move_list[num_move].Update(pos_list[panel2]);
         }
 
-        
-
-
-        /*
-                Vector3 v = new Vector3(0,0,0);
-
-                v.x = math.sin(Time.time * tx + sx) * vx;
-                v.y = math.cos(Time.time * ty + sy) * vy;
-
-                transform.position = v;
-        */
-
     }
 }
 
+[System.Serializable]
+public struct PiSinParams
+{
+    public float speed;
+    public float offset;
+    public float scale;  
+}
+
+[System.Serializable]
 public class PiSinMoove
 {
-    public float _tx = 0;
-    public float _vx = 0;
-    public float _sx = 0;
+    public PiSinParams pos_x;
+    public PiSinParams pos_y;
+    public PiSinParams pos_z;
 
-    public float _ty = 0;
-    public float _vy = 0;
-    public float _sy = 0;
+    private Vector3 v = new Vector3(0, 0, 0);
 
-    public Vector3 v = new Vector3(0, 0, 0);
+    public Vector3 Pos {  get { return v; } }
+
 
     public PiSinMoove(float tx, float vx, float sx, float ty, float vy, float sy)
     {
-        _tx = tx; _vx = vx; _sx = sx; _ty = ty; _vy = vy; _sy = sy;
+        pos_x.speed = tx; pos_x.offset = sx; pos_x.scale = vx;
+        pos_y.speed = ty; pos_y.offset = sy; pos_y.scale = vy;
     }
 
     public Vector3 Update(Vector3 offset)
     {
-        v.x = math.sin(Time.time * _tx + _sx) * _vx  + offset.x;
-        v.y = math.cos(Time.time * _ty + _sy) * _vy  + offset.y;
+        v.x = math.sin(Time.time * pos_x.speed + pos_x.offset) * pos_x.scale + offset.x;
+        v.y = math.cos(Time.time * pos_y.speed + pos_y.offset) * pos_y.scale + offset.y;
         v.z = offset.z;
 
         return v;

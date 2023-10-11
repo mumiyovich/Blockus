@@ -119,6 +119,13 @@ public class GameManager : MonoBehaviour
 
 
 
+    [HideInInspector] public static GameManager _gm;
+
+
+    public GameManager()
+    {
+        _gm = this;
+    }
 
     private void Awake()
     {
@@ -994,7 +1001,7 @@ public class GameManager : MonoBehaviour
         PanelPause.SetActive(false);
     }
 
-    public void ChangeAlpha(GameObject go, float alphaVal)
+    public static void ChangeAlpha(GameObject go, float alphaVal)
     {
 
         Renderer renderer = go.GetComponent<Renderer>();
