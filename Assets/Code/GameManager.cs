@@ -240,7 +240,7 @@ public class GameManager : MonoBehaviour
 
         }
 
-        tekst_sc.text = "FPS: " + fps.ToString() + " MIN: " + min_fps + " MAX: " + max_fps;
+        tekst_sc.text = "FPS:" + fps.ToString() + " MIN:" + min_fps + " MAX:" + max_fps;
 
     }
 
