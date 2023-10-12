@@ -2,176 +2,196 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro.Examples;
 using Unity.Mathematics;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.VFX;
 using UnityEngine.XR;
-using static GameManager;
+
+
 
 public class BackPanel : MonoBehaviour
 {
     [SerializeField] private List<GameObject> Backs;
+    private int num_back;
+
+    [SerializeField]
+    private GameObject BackMesh;
+    private GameObject current_back = null;
+
+    [SerializeField]
+    private GameObject ColorQuad;
 
 
-    private Transform meshes = null;
-
-    private GameObject panel1 = null;
-    private GameObject panel2 = null;
-
-
-    private int num_move = 0;
-
-    [SerializeField] private List<PiSinMoove> move_list;// = new List<PiSinMoove>();
-
-    private Dictionary<GameObject, Vector3> pos_list = new Dictionary<GameObject, Vector3>();
+    [SerializeField] private List<PiSinMoove> move_list;
+    private int num_move;
 
     private void Awake()
     {
-        //  _gm = GameObject.Find("GameManager").GetComponent<GameManager>();
-        //_gm = GameManager._gm;
-        meshes = transform.Find("meshes");
+
     }
 
     // Start is called before the first frame update
     void Start()
     {
-
-  
+        num_back = 0;
         num_move = 0;
-        InitMoveParams();
-
-        foreach (Transform child in meshes.transform)
-        {
-            child.gameObject.SetActive(false);
-            pos_list.Add(child.gameObject ,  child.position);
-        }
-
-         ChangeMesh();
 
 
+        NewBack();
     }
 
-    public void InitMoveParams()
-    {
-
-        move_list.Add(new PiSinMoove(1.0f,1.0f,0.0f,    1.0f,0.9f,0.0f));
-        move_list.Add(new PiSinMoove(0.5f, 1.0f, 0.0f,  0.0f, 0.0f, 3.0f));
-        move_list.Add(new PiSinMoove(0.5f, 1.0f, 0.0f,  1.0f, 0.7f, 3.14f));
-        move_list.Add(new PiSinMoove(0.0f, 0.0f, 0.0f,  1.0f, 0.7f, 3.14f / 2.0f));
-    }
-
-    public void ChangeMesh()
-    {
-        panel1 = null;
-        panel2 = meshes.transform.GetChild(0).gameObject;
-
-        foreach (Transform child in meshes.transform)
-        {
-            if (panel1!=null)
-            {
-                panel2 = child.gameObject;
-                break;
-            }
-            if (child.gameObject.activeSelf)
-            {
-                panel1 = child.gameObject;
-            }
-        }
-        panel1?.SetActive(true);
-        panel2?.SetActive(true);
-
-        num_move++;
-        if(num_move == move_list.Count)
-            num_move = 0;
-
-        StartCoroutine(routine: ChangeMeshProcess());
-    }
-
-    private IEnumerator ChangeMeshProcess()
-    {
-
-        float t = 0;
-
-        panel1?.SetActive(true);
-        panel2?.SetActive(true);
-
-        while (t<=1)
-        {
-            if(panel1!=null)
-            {
-                GameManager.ChangeAlpha(panel1, 1.0f - t);
-            }
-
-            if (panel2 != null)
-            {
-                GameManager.ChangeAlpha(panel2, t);
-            }
-            t += Time.deltaTime;
-
-            yield return null;
-        }
-
-        panel1?.SetActive(false);
-        panel1 = null;
-        GameManager.ChangeAlpha(panel2, 1.0f);
-
-        yield break;
-    }
 
     void Update()
     {
-        
 
-        if (panel1 != null)
+
+
+
+    }
+
+
+    public void NewBack()
+    {
+        GameObject new_current_back = (Instantiate(BackMesh) as GameObject);
+        new_current_back.transform.parent = transform;
+        GameObject mesh = (Instantiate(Backs[num_back]) as GameObject);
+        mesh.transform.parent = new_current_back.transform;
+
+        FadeTransparent ft_new = new_current_back.GetComponent<FadeTransparent>();
+        ft_new.InitInOut();
+
+        bool off_cur = true;
+
+        if (current_back != null)
         {
-            int _num_move = num_move - 1;
-            if (_num_move == -1)
+            FadeTransparent ft_cur = current_back.GetComponent<FadeTransparent>();
+
+            if (ft_new.In == BackFX.ColorInOut)
             {
-                _num_move = move_list.Count - 1;
+                ft_cur.Out = BackFX.None;
+                StartFxColorInOut(current_back, new_current_back, ft_new.color_fx, ft_new.smooth_type, ft_new.fade_time);
+                off_cur = false;
             }
-            panel1.transform.position = move_list[_num_move].Update(pos_list[panel1]);
+            else
+            if (ft_new.In == BackFX.ColorFlash)
+            {
+                ft_cur.Out = BackFX.None;
+                StartFxColorFlash(ft_new.color_fx, ft_new.smooth_type, ft_new.fade_time);
+            }
+
+
+            if (ft_cur.Out == BackFX.ColorInOut)
+            {
+                ft_new.In = BackFX.None;
+                StartFxColorInOut(current_back, new_current_back, ft_cur.color_fx, ft_cur.smooth_type, ft_cur.fade_time);
+                off_cur = false;
+            }
+            else
+            if (ft_cur.Out == BackFX.ColorFlash)
+            {
+                ft_new.In = BackFX.None;
+                StartFxColorFlash(ft_cur.color_fx, ft_cur.smooth_type, ft_cur.fade_time);
+            }
+
+
+
+
+            if (off_cur)
+                ft_cur.Off();
+
+
         }
 
-        if (panel2!=null)
+        current_back = new_current_back;
+
+
+
+        SinusoidalMotion sm = mesh.GetComponent<SinusoidalMotion>();
+        if (sm != null)
         {
-            panel2.transform.position = move_list[num_move].Update(pos_list[panel2]);
+            if (sm.ForExternalParameters)
+            {
+                sm.SinMoov.Init(move_list[num_move]);
+
+                num_move = (num_move + 1) >= move_list.Count ? 0 : (num_move + 1);
+            }
+        }
+
+        num_back = (num_back + 1) >= Backs.Count ? 0 : (num_back + 1);
+
+
+    }
+
+    GameObject CreateFxColorQuad(Color p_color)
+    {
+        GameObject wq = (Instantiate(ColorQuad) as GameObject);
+        wq.transform.parent = transform;
+        wq.GetComponent<Renderer>().material.color = p_color;
+        return wq;
+    }
+
+    void StartFxColorFlash(Color p_color, SmoothType p_smoov, float p_time)
+    {
+        GameObject wq = CreateFxColorQuad(p_color);
+        FadeTransparent ft = wq.GetComponent<FadeTransparent>();
+        ft.In = BackFX.None;
+        ft.Out = BackFX.Fade;
+        ft.on_of = false;
+        ft.smooth_type = p_smoov;
+        if (p_time != 0) ft.fade_time = p_time;
+        ft.Off();
+    }
+
+    void StartFxColorInOut(GameObject go1, GameObject go2, Color p_color, SmoothType p_smoov, float p_time)
+    {
+        GameObject wq = CreateFxColorQuad(p_color);
+        FadeTransparent ft = wq.GetComponent<FadeTransparent>();
+        ft.In = BackFX.Fade;
+        ft.Out = BackFX.Fade;
+        ft.on_of = true;
+        if(p_time!=0) ft.fade_time = p_time;
+        float f_tim = ft.fade_time;
+        ft.smooth_type = p_smoov;
+
+        go2?.SetActive(false);
+
+        if (go1 != null)
+        {
+            StartCoroutine(routine: ObjectDestroy(go1, f_tim));
+        }
+        if (go2 != null)
+        {
+            StartCoroutine(routine: ObjectAtivate(go2, f_tim));
         }
 
     }
-}
 
-[System.Serializable]
-public struct PiSinParams
-{
-    public float speed;
-    public float offset;
-    public float scale;  
-}
-
-[System.Serializable]
-public class PiSinMoove
-{
-    public PiSinParams pos_x;
-    public PiSinParams pos_y;
-    public PiSinParams pos_z;
-
-    private Vector3 v = new Vector3(0, 0, 0);
-
-    public Vector3 Pos {  get { return v; } }
-
-
-    public PiSinMoove(float tx, float vx, float sx, float ty, float vy, float sy)
+    private IEnumerator ObjectDestroy(GameObject go, float tim)
     {
-        pos_x.speed = tx; pos_x.offset = sx; pos_x.scale = vx;
-        pos_y.speed = ty; pos_y.offset = sy; pos_y.scale = vy;
+        float t = 0;
+        do
+        {
+            t += Time.deltaTime;
+
+            yield return null;
+        } while (t < tim);
+        Destroy(go);
+        yield break;
     }
 
-    public Vector3 Update(Vector3 offset)
+    private IEnumerator ObjectAtivate(GameObject go, float tim)
     {
-        v.x = math.sin(Time.time * pos_x.speed + pos_x.offset) * pos_x.scale + offset.x;
-        v.y = math.cos(Time.time * pos_y.speed + pos_y.offset) * pos_y.scale + offset.y;
-        v.z = offset.z;
+        float t = 0;
+        do
+        {
+            t += Time.deltaTime;
 
-        return v;
+            yield return null;
+        } while (t < tim);
+        go.SetActive(true);
+        yield break;
     }
 
+
 }
+

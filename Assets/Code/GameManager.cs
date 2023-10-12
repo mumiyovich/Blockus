@@ -93,7 +93,6 @@ public class GameManager : MonoBehaviour
             if (_count_x_block != value)
             {
                 AllOk();
-                AllOk();
                 _count_x_block = value;
                 InitXLines();
             }
@@ -313,12 +312,20 @@ public class GameManager : MonoBehaviour
 
         ///////!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         time_level_change += Time.deltaTime;
-        if(time_level_change >= 10)
+        if(time_level_change >= 60)
         {
             time_level_change = 0;
-            backPanel.ChangeMesh();
+            backPanel.NewBack();
+
+            NextLevel();
         }
 
+    }
+
+    void NextLevel()
+    {
+        AllOk();
+        leven_num++;
     }
 
     void AllOk(int p_scor = 0)
@@ -1001,31 +1008,7 @@ public class GameManager : MonoBehaviour
         PanelPause.SetActive(false);
     }
 
-    public static void ChangeAlpha(GameObject go, float alphaVal)
-    {
 
-        Renderer renderer = go.GetComponent<Renderer>();
-
-
-        Color oldColor = renderer.material.color;
-        Color newColor = new Color(oldColor.r, oldColor.g, oldColor.b, alphaVal);
-
-        renderer.material.color = newColor;
-
-        renderer.material.SetFloat("_Surface", (float)1);
-        renderer.material.SetFloat("_Blend", (float)0);
-        renderer.material.SetOverrideTag("RenderType", "Transparent");
-        renderer.material.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
-        renderer.material.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
-        renderer.material.SetInt("_ZWrite", 0);
-        renderer.material.DisableKeyword("_ALPHAPREMULTIPLY_ON");
-        renderer.material.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Transparent;
-        //renderer.material.SetShaderPassEnabled("ShadowCaster", false);
-
-
-
-
-    }
 
 
 }
