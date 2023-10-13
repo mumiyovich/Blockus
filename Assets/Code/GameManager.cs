@@ -312,15 +312,30 @@ public class GameManager : MonoBehaviour
 
         ///////!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         time_level_change += Time.deltaTime;
-        if(time_level_change >= 60)
+        if(time_level_change >= 60*3)
         {
             time_level_change = 0;
             backPanel.NewBack();
 
             NextLevel();
+
+            /*
+            do
+            {
+                count_x_block = UnityEngine.Random.Range(3, 8);
+            }while(count_x_block == old_count_x_block);
+
+            old_count_x_block = count_x_block;
+            */
+            count_x_block++;
+            if (count_x_block == 8)
+                count_x_block = 3;
+
+
         }
 
     }
+    //int old_count_x_block = 5;
 
     void NextLevel()
     {

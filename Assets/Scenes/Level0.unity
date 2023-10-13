@@ -2290,7 +2290,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
+  m_BackGroundColor: {r: 0.18867922, g: 0.18867922, b: 0.18867922, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -2679,9 +2679,12 @@ MonoBehaviour:
   - {fileID: 4638714050411635958, guid: 14f1b461ff2f9904d932d05c1336e4d2, type: 3}
   - {fileID: 8970297288571296610, guid: 935cb1dd7ff40ab498cb3c79d9e0549a, type: 3}
   - {fileID: 3861153725539754925, guid: 2230d88d391617442b920a8f4d64ff68, type: 3}
+  Effects:
+  - {fileID: 6486607556643977438, guid: 1edfb0525fc47644fac2dbccef410c52, type: 3}
+  - {fileID: 3441446438757615688, guid: f5e91efa1578e3449ad509f779eeb575, type: 3}
+  - {fileID: 7938731214070118476, guid: 723af012724aa5446818dfac9bed1897, type: 3}
+  - {fileID: 5987338625740903449, guid: 3ee3f33e901fef8428990e0425b8a510, type: 3}
   BackMesh: {fileID: 5366969996072827953, guid: 64911ea5e9af5e744bff44815112d278,
-    type: 3}
-  ColorQuad: {fileID: 3441446438757615688, guid: f5e91efa1578e3449ad509f779eeb575,
     type: 3}
   move_list:
   - pos_x:

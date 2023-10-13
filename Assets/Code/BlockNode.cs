@@ -35,7 +35,7 @@ public class BlockNode : MonoBehaviour
     [SerializeField] private float priz_speed;
     private int cur_priz = 0;
 
-    private float rotate_seed=0;
+    private float rotate_seed = 0;
 
     public Rigidbody rb;
 
@@ -46,7 +46,7 @@ public class BlockNode : MonoBehaviour
 
     private float scale = 0;
 
-   
+
 
     private void OnDestroy()
     {
@@ -66,12 +66,12 @@ public class BlockNode : MonoBehaviour
 
         scale = 0;
 
-        rotate_seed = ((float)UnityEngine.Random.Range(0, 1001))/1001.0f * 6.28f;
+        rotate_seed = ((float)UnityEngine.Random.Range(0, 1001)) / 1001.0f * 6.28f;
 
         rb = GetComponent<Rigidbody>();
 
 
-     //   currentMat = meshes.GetComponent<Renderer>().material;
+        //   currentMat = meshes.GetComponent<Renderer>().material;
 
         //ChangeAlpha(0.1f);
     }
@@ -84,11 +84,20 @@ public class BlockNode : MonoBehaviour
 
 
         float dist_to_panel = transform.position.y - (down_panel.transform.position.y + _gm.down_panel_height);
-        if(dist_to_panel < height_bonus_line * _gm.scale_block)
+        if (dist_to_panel < height_bonus_line * _gm.scale_block)
         {
             if (_gm.blocks_in_down.ContainsKey(gameObject) == false)
             {
-                _gm.blocks_in_down.Add(gameObject, this);
+                bool ok = true;
+                foreach (KeyValuePair<GameObject, BlockNode> bl in _gm.blocks_in_down)
+                {
+                    if (bl.Key.transform.position.x == gameObject.transform.position.x)
+                    {
+                        ok = false; break;
+                    }
+                }
+                if (ok)
+                    _gm.blocks_in_down.Add(gameObject, this);
             }
         }
         else
@@ -100,7 +109,7 @@ public class BlockNode : MonoBehaviour
         }
 
 
-        if (scale!=1)
+        if (scale != 1)
         {
             scale += Time.deltaTime * 1.5f;// 3.0f;
 
@@ -114,7 +123,7 @@ public class BlockNode : MonoBehaviour
 
         time_toock += Time.deltaTime * time_toock_k;
 
-        if(time_toock >= took_time)
+        if (time_toock >= took_time)
         {
             time_toock = 0;
             time_toock_k = 0;
@@ -123,7 +132,7 @@ public class BlockNode : MonoBehaviour
 
         if (type == -1)
         {
-            priz_cur_time+=Time.deltaTime;
+            priz_cur_time += Time.deltaTime;
             if (priz_cur_time >= priz_speed)
             {
                 priz_cur_time = 0;
@@ -152,7 +161,7 @@ public class BlockNode : MonoBehaviour
         }
         meshes.transform.GetChild(cur_priz).gameObject.SetActive(true);
         cur_priz++;
-        if(cur_priz == meshes.transform.childCount)
+        if (cur_priz == meshes.transform.childCount)
         {
             cur_priz = 0;
         }
@@ -186,13 +195,13 @@ public class BlockNode : MonoBehaviour
             return;
         }
 
-        if ((type == -2 || other_b.type == -2)&&(type != -1 && other_b.type != -1))
+        if ((type == -2 || other_b.type == -2) && (type != -1 && other_b.type != -1))
         {
             return;
         }
 
 
-        if (type == other_b.type || type == -1 || other_b.type==-1)
+        if (type == other_b.type || type == -1 || other_b.type == -1)
         {
             _gm.BlocksOk(transform, other_b.transform, true);
         }

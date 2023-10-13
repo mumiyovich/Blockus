@@ -2,15 +2,75 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Unity.Mathematics;
+using Unity.VisualScripting;
 
+public enum SmoothType { Linear, InOut, In, Out }
 
-public class TransparentObjects : MonoBehaviour
+public struct RendererItem
 {
+    public struct RendererStares
+    {
+        public float _Surface;
+        public float _Blend;
+        public int _SrcBlend;
+        public int _DstBlend;
+        public int _ZWrite;
+        public int renderQueue;
+    }
 
+    public RendererStares renderer_stares;
+
+    public Renderer renderer;
+    private Material _material;
+    public Material material
+    {
+        get { return _material; }
+        set
+        {
+            _material = value;
+
+            renderer_stares._Surface = _material.GetFloat("_Surface");
+            renderer_stares._Blend = _material.GetFloat("_Blend");
+            renderer_stares._SrcBlend = _material.GetInt("_SrcBlend");
+            renderer_stares._DstBlend = _material.GetInt("_DstBlend");
+            renderer_stares._ZWrite = _material.GetInt("_ZWrite");
+            renderer_stares.renderQueue = _material.renderQueue;
+        }
+    }
+    public Color color;
 }
 
 public class StaticLib
 {
+    public static float SmoothedLerp(float i1, float i2, float t, SmoothType type)
+    {
+        float k = Smoothed(t, type);
+        return math.lerp(i1, i2, k);
+    }
+
+    public static float Smoothed(float t, SmoothType type)
+    {
+        float v = 0;
+        if (t == 0 || t == 1 || type == SmoothType.Linear)
+        {
+            v = t;
+        }
+        else if (type == SmoothType.InOut)
+        {
+            v = 1.0f - (math.cos(t * math.PI) * 0.5f + 0.5f);
+        }
+        else if (type == SmoothType.In)
+        {
+            v = t * t;
+        }
+        else if (type == SmoothType.Out)
+        {
+            v = 1.0f - (1.0f - t) * (1.0f - t);
+        }
+
+        return v;
+    }
+
     public static void ChangeAlpha(List<RendererItem> renderers, float alphaVal, SmoothType type)
     {
         foreach(RendererItem item in renderers)
@@ -21,24 +81,7 @@ public class StaticLib
 
     public static void ChangeAlpha(RendererItem ri, float p_alphaVal, SmoothType type)
     {
-        float alphaVal=0;
-        if (p_alphaVal == 0 || p_alphaVal == 1 || type == SmoothType.Linear)
-        {
-            alphaVal = p_alphaVal;
-        }
-        else if (type == SmoothType.InOut)
-        {
-            alphaVal = 1.0f - (math.cos(p_alphaVal * math.PI) * 0.5f + 0.5f);
-        }
-        else if (type == SmoothType.In)
-        {
-            alphaVal = p_alphaVal * p_alphaVal;
-        }
-        else if (type == SmoothType.Out)
-        {
-            alphaVal = 1.0f - (1.0f - p_alphaVal) * (1.0f - p_alphaVal);
-        }
-
+        float alphaVal= Smoothed(p_alphaVal, type);
 
         if (alphaVal == 0)
         {
@@ -76,8 +119,8 @@ public class StaticLib
             if (ri.renderer_stares.renderQueue != (int)UnityEngine.Rendering.RenderQueue.Transparent)
                 ri.material.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Transparent;
 
-            ri.material.SetOverrideTag("RenderType", "Transparent"); //--------------
-            ri.material.DisableKeyword("_ALPHAPREMULTIPLY_ON");//--------
+         //   ri.material.SetOverrideTag("RenderType", "Transparent"); //--------------
+         //   ri.material.DisableKeyword("_ALPHAPREMULTIPLY_ON");//--------
 
         }
 

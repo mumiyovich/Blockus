@@ -124,5 +124,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf14d9215fd1a5e4694132c6295b133e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  In: 2
-  Out: 2
+  StartFx: 01000000
+  EndFx: 
