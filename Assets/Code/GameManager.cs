@@ -135,6 +135,7 @@ public class GameManager : MonoBehaviour
         st_last_x_block = last_x_block;
 
         backPanel = Back_Panel.GetComponent<BackPanel>();
+
     }
 
 

@@ -131,7 +131,7 @@ GameObject:
   - component: {fileID: 98292007}
   - component: {fileID: 98292006}
   - component: {fileID: 98292005}
-  m_Layer: 14
+  m_Layer: 12
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -214,7 +214,7 @@ GameObject:
   - component: {fileID: 209412871}
   - component: {fileID: 209412870}
   - component: {fileID: 209412869}
-  m_Layer: 15
+  m_Layer: 13
   m_Name: Sphere
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -522,7 +522,7 @@ GameObject:
   - component: {fileID: 1655860939}
   - component: {fileID: 1655860938}
   - component: {fileID: 1655860937}
-  m_Layer: 12
+  m_Layer: 11
   m_Name: Mask
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -587,13 +587,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1655860935}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: 0.19940811, w: 0.9799166}
-  m_LocalPosition: {x: 2.68, y: 1.26, z: 0.237643}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 2.53, y: 1.26, z: 0.237643}
   m_LocalScale: {x: 2.6841, y: 8.397281, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 23.005}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1922309438
 GameObject:
   m_ObjectHideFlags: 0
