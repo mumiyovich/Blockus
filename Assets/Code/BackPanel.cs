@@ -176,7 +176,7 @@ public class BackPanel : MonoBehaviour
         previous_fx = odj_fx;
 
 
-        //odj_fx = Effects[3];
+        odj_fx = Effects[4];//!!!!!
         odj_fx = (Instantiate(odj_fx) as GameObject);
         odj_fx.transform.parent = transform;
         BasicEffect fx = odj_fx.GetComponent<BasicEffect>();

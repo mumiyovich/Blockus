@@ -71,6 +71,19 @@ public class StaticLib
         return v;
     }
 
+    public static void SetLayer(GameObject go, int layer)
+    {
+
+        if (go == null)
+            return;
+        go.layer = layer;
+        foreach (Transform child in go.transform)
+        {
+            SetLayer(child.gameObject, layer);
+        }
+    }
+
+
     public static void ChangeAlpha(List<RendererItem> renderers, float alphaVal, SmoothType type)
     {
         foreach(RendererItem item in renderers)

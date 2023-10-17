@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum BackFX { None, Fade, Over }
+public enum BackFX { None, Fade, Over, Mask }
 
 public class BasicEffect : MonoBehaviour
 {
