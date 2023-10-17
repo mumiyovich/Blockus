@@ -2674,6 +2674,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42d754a97b5a9534b91e6478fc8b58f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _num_fx_test: -1
   Backs:
   - {fileID: 1501931625166826700, guid: a9c6842bbcbeacc4ea71e6a9d3a269c7, type: 3}
   - {fileID: 4638714050411635958, guid: 14f1b461ff2f9904d932d05c1336e4d2, type: 3}
@@ -2684,7 +2685,9 @@ MonoBehaviour:
   - {fileID: 3441446438757615688, guid: f5e91efa1578e3449ad509f779eeb575, type: 3}
   - {fileID: 7938731214070118476, guid: 723af012724aa5446818dfac9bed1897, type: 3}
   - {fileID: 5987338625740903449, guid: 3ee3f33e901fef8428990e0425b8a510, type: 3}
-  - {fileID: 2799357807015420117, guid: 8bb909918a461404ab59b07c6b8482c1, type: 3}
+  - {fileID: 3176221473679607099, guid: 407b543bf2ff17b48bcd84720d4330d0, type: 3}
+  - {fileID: 4937102600415771128, guid: 8e72194025c968941a3f47a57cf05c1d, type: 3}
+  - {fileID: 1432335249836261592, guid: e58a05377489e744480943b6790618c8, type: 3}
   BackMesh: {fileID: 5366969996072827953, guid: 64911ea5e9af5e744bff44815112d278,
     type: 3}
   move_list:

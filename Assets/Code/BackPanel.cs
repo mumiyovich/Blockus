@@ -11,6 +11,8 @@ using UnityEngine.XR;
 
 public class BackPanel : MonoBehaviour
 {
+    [SerializeField] private int _num_fx_test = -1;
+
     [SerializeField] private List<GameObject> Backs;
     private int num_back;
 
@@ -176,7 +178,9 @@ public class BackPanel : MonoBehaviour
         previous_fx = odj_fx;
 
 
-        odj_fx = Effects[4];//!!!!!
+        if(_num_fx_test>-1)
+            odj_fx = Effects[_num_fx_test];//!!!!!
+
         odj_fx = (Instantiate(odj_fx) as GameObject);
         odj_fx.transform.parent = transform;
         BasicEffect fx = odj_fx.GetComponent<BasicEffect>();

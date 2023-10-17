@@ -310,21 +310,26 @@ public class GameManager : MonoBehaviour
             count_x_block++;
         }
 
+        if (Input.GetKeyUp(KeyCode.A))
+        {
+            backPanel.NewBack();
+        }
+
 
         ///////!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         time_level_change += Time.deltaTime;
-        if(time_level_change >= 3)
+        if(time_level_change >= 60 * 3)
         {
             time_level_change = 0;
 
             
             backPanel.NewBack();
-            /*
+            
             NextLevel();
             count_x_block++;
             if (count_x_block == 8)
                 count_x_block = 3;
-            */
+            
 
 
         }
