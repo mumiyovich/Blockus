@@ -316,8 +316,6 @@ namespace Pixeye.Unity
 
 			var c_on = pro ? Color.white : new Color(51 / 255f, 102 / 255f, 204 / 255f, 1);
 
-			c_on = Color.white;
-
             button      = new GUIStyle(EditorStyles.miniButton);
 			button.font = Font.CreateDynamicFontFromOSFont(new[] {"Terminus (TTF) for Windows", "Calibri"}, 17);
 
