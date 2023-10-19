@@ -1,3 +1,4 @@
+using Pixeye.Unity;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -30,7 +31,7 @@ public class GameManager : MonoBehaviour
     private bool is_paused = false;
     private bool first = true;
 
-    [HideInInspector] public float scale_block =1;
+    [HideInInspector] public float scale_block = 1;
 
 
     private BackPanel backPanel;
@@ -39,14 +40,14 @@ public class GameManager : MonoBehaviour
     [HideInInspector] public Dictionary<GameObject, BlockNode> blocks_in_down = new Dictionary<GameObject, BlockNode>();
 
 
-
-    [Header("Particles")]
+    [Foldout("Particles:", true)]
+    //[Header("Particles:")]
     [SerializeField] private GameObject ParticleSwop;
     [SerializeField] private GameObject ParticleBoom;
     [SerializeField] private GameObject ParticleOk;
 
-
-    [Header("Objects:")]
+    [Foldout("Objects:", true)]
+    //[Header("Objects:")]
     [SerializeField] private GameObject PanelPause;
     [SerializeField] private GameObject down_panel;
     [SerializeField] private GameObject StartSceneX;
@@ -63,18 +64,19 @@ public class GameManager : MonoBehaviour
         public List<GameObject> blocks;
     }
 
-    [Header("Objects blocks:")]
+    [Foldout("Objects blocks:", true)]
+   // [Header("Objects blocks:")]
     [SerializeField] private List<Blocks_level> blocks_level;
 
-
-    [Header("Texts:")]
+    [Foldout("Texts:", true)]
+   // [Header("Texts:")]
     [SerializeField] private TextMeshProUGUI tekst_sc;
     [SerializeField] private TextMeshProUGUI tekst_score;
 
 
 
-
-    [Header("Blocks params:")]
+    [Foldout("Blocks params:", true)]
+    // [Header("Blocks params:")]
     [SerializeField] private float start_y_block;
     [SerializeField] private float first_x_block;
     [SerializeField] private float last_x_block;
@@ -99,8 +101,8 @@ public class GameManager : MonoBehaviour
         }
     }
 
-
-    [Header("Difficult:")]
+    [Foldout("Difficult:", true)]
+    //[Header("Difficult:")]
     [SerializeField] private GameObject diff_progres;
     [SerializeField] private int leven_num = 0;
     [SerializeField] private float min_gravity;
@@ -318,7 +320,7 @@ public class GameManager : MonoBehaviour
 
         ///////!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         time_level_change += Time.deltaTime;
-        if(time_level_change >= 60 * 3)
+        if(time_level_change >= 60*3)
         {
             time_level_change = 0;
 

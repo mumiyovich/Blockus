@@ -11,11 +11,12 @@ using UnityEngine.XR;
 
 public class BackPanel : MonoBehaviour
 {
-    [SerializeField] private int _num_fx_test = -1;
+ 
 
     [SerializeField] private List<GameObject> Backs;
     private int num_back;
 
+    [SerializeField] private int _num_fx_test = -1;
     [SerializeField] private List<GameObject> Effects;
 
     [SerializeField]
@@ -80,105 +81,17 @@ public class BackPanel : MonoBehaviour
     }
 
 
-    GameObject previous_fx = null;
+    int _num_fx = -1;
     void StartFX(GameObject obj1, GameObject obj2)
     {
-
-        List<BackFX> lfx1 = new List<BackFX>();
-        List<BackFX> lfx2 = new List<BackFX>();
-        List<BackFX> lfx = new List<BackFX>();
-
-        BackPanelProperty param;
-
-        if (obj1 != null)
-        {
-            param = obj1.GetComponentInChildren<BackPanelProperty>();
-            if (param != null)
-            {
-                lfx1 = param.EndFx;
-            }
-        }
-
-        if (obj2 != null)
-        {
-            param = obj2.GetComponentInChildren<BackPanelProperty>();
-            if (param != null)
-            {
-                lfx2 = param.StartFx;
-            }
-        }
-
-        if (lfx1.Count == 0)
-        {
-            lfx = lfx2;
-        }
-        else
-        if (lfx2.Count == 0)
-        {
-            lfx = lfx1;
-        }
-        else
-        {
-
-            foreach (BackFX f in lfx1)
-            {
-                if (f == BackFX.Over)
-                {
-                    if (lfx.IndexOf(f) == -1)
-                        lfx.Add(f);
-                }
-                else
-                {
-                    if (lfx2.IndexOf(f) != -1)
-                        if (lfx.IndexOf(f) == -1)
-                            lfx.Add(f);
-                }
-            }
-            foreach (BackFX f in lfx2)
-            {
-                if (f == BackFX.Over)
-                    if (lfx.IndexOf(f) == -1)
-                        lfx.Add(f);
-            }
-
-        }
-
-        List<GameObject> 픳ailableEffects = new List<GameObject>();
-
-        if (lfx.Count == 0)
-        {
-            픳ailableEffects = Effects;
-        }
-        else
-        {
-            foreach (GameObject f in Effects)
-            {
-                BackFX tfx = f.GetComponent<BasicEffect>().Type;
-                if (lfx.Count == 0 || lfx.IndexOf(tfx) != -1)
-                {
-                    픳ailableEffects.Add(f);
-                }
-            }
-        }
-        if (픳ailableEffects.Count == 0)
-            픳ailableEffects = Effects;
-
-        int idfx = UnityEngine.Random.Range(0, 픳ailableEffects.Count);
-        GameObject odj_fx = 픳ailableEffects[idfx];
-
-        if (픳ailableEffects.Count > 1)
-            if (odj_fx == previous_fx)
-            {
-                if (idfx == 픳ailableEffects.Count - 1)
-                    idfx = 0;
-                else
-                    idfx++;
-                odj_fx = 픳ailableEffects[idfx];
-            }
-        previous_fx = odj_fx;
+        _num_fx++;
+        if (_num_fx >= Effects.Count)
+            _num_fx = 0;
 
 
-        if(_num_fx_test>-1)
+        GameObject odj_fx = Effects[_num_fx];
+
+        if (_num_fx_test>-1)
             odj_fx = Effects[_num_fx_test];//!!!!!
 
         odj_fx = (Instantiate(odj_fx) as GameObject);

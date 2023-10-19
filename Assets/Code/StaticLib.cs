@@ -57,7 +57,8 @@ public class StaticLib
         }
         else if (type == SmoothType.InOut)
         {
-            v = 1.0f - (math.cos(t * math.PI) * 0.5f + 0.5f);
+            //   v = 1.0f - (math.cos(t * math.PI) * 0.5f + 0.5f);
+            v = t * t * (3 - 2 * t);
         }
         else if (type == SmoothType.In)
         {
@@ -158,3 +159,5 @@ public class StaticLib
     }
 
 }
+
+
