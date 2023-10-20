@@ -40,6 +40,8 @@ public class blokus_logo : MonoBehaviour
     {
         Application.targetFrameRate = 60;
         //QualitySettings.vSyncCount = 0;
+
+        SaveManager.Load();
     }
 
     // Start is called before the first frame update

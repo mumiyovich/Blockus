@@ -898,6 +898,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 018b1bb9592087b46925396351f16377, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  state:
+    _score: 0
+    _score_diff: 0
+    _leven_num: 0
+    _score_add: 0
+    _count_x_block: 5
   scale_block: 1
   ParticleSwop: {fileID: 1725154457893194479, guid: 14f47500fd45a314baaba4189592cc6b,
     type: 3}
@@ -935,21 +941,17 @@ MonoBehaviour:
   last_x_block: 1.83
   down_panel_height: 0.479
   height_down_line: 1.5
-  _count_x_block: 5
   diff_progres: {fileID: 377547239}
-  leven_num: 0
   min_gravity: 0.5
   max_gravity: 6
   _gravity: 0
   priz_var: 10
   solid_var: 20
-  lives: 100
   min_time_new_block: 1
   max_time_new_block: 4
   time_new_block: 0
   max_score: 1000
   score_speed: 0.2
-  score_add: 0
 --- !u!4 &319757356
 Transform:
   m_ObjectHideFlags: 0
@@ -2674,12 +2676,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42d754a97b5a9534b91e6478fc8b58f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _num_fx_test: -1
   Backs:
   - {fileID: 1501931625166826700, guid: a9c6842bbcbeacc4ea71e6a9d3a269c7, type: 3}
   - {fileID: 4638714050411635958, guid: 14f1b461ff2f9904d932d05c1336e4d2, type: 3}
   - {fileID: 8970297288571296610, guid: 935cb1dd7ff40ab498cb3c79d9e0549a, type: 3}
   - {fileID: 3861153725539754925, guid: 2230d88d391617442b920a8f4d64ff68, type: 3}
+  _num_fx_test: -1
   Effects:
   - {fileID: 3441446438757615688, guid: f5e91efa1578e3449ad509f779eeb575, type: 3}
   - {fileID: 7938731214070118476, guid: 723af012724aa5446818dfac9bed1897, type: 3}

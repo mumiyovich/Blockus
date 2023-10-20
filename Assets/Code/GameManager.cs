@@ -1,17 +1,18 @@
 using Pixeye.Unity;
 using System;
-using System.Collections;
+//using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
+//using System.Linq;
 //using System.Drawing;
 using TMPro;
 using Unity.Mathematics;
-using Unity.VisualScripting;
+//using Unity.VisualScripting;
+//using UnityEditor.PackageManager;
 using UnityEngine;
-using UnityEngine.SocialPlatforms.Impl;
-using UnityEngine.UIElements;
-using UnityEngine.XR;
-using static UnityEngine.GraphicsBuffer;
+//using UnityEngine.SocialPlatforms.Impl;
+//using UnityEngine.UIElements;
+//using UnityEngine.XR;
+//using static UnityEngine.GraphicsBuffer;
 
 
 //To format a selection: Ctrl + K, Ctrl + F
@@ -23,13 +24,15 @@ public class GameManager : MonoBehaviour
     private bool start = true;
     private float _cam_sh = 0;
     private float _k_cam = 0.1f;
-    private int score = 0;
+ //   private int score = 0;
     private int draw_score = 0;
-    private int score_diff = 0;
+//    private int score_diff = 0;
     private float[] x_lines;
     private float sec_scor_add_end = 1.0f;
     private bool is_paused = false;
     private bool first = true;
+
+    [SerializeField] private State state = SaveManager.state;
 
     [HideInInspector] public float scale_block = 1;
 
@@ -85,7 +88,7 @@ public class GameManager : MonoBehaviour
     private float st_first_x_block;
     private float st_last_x_block;
 
-    //[SerializeField] public int count_x_block;
+    /*
     [SerializeField] private int _count_x_block;
     public int count_x_block
     {
@@ -100,23 +103,37 @@ public class GameManager : MonoBehaviour
             }
         }
     }
+    */
+    public int count_x_block
+    {
+        get { return state.count_x_block; }
+        set
+        {
+            if (state.count_x_block != value)
+            {
+                AllOk();
+                state.count_x_block = value;
+                InitXLines();
+            }
+        }
+    }
 
     [Foldout("Difficult:", true)]
     //[Header("Difficult:")]
     [SerializeField] private GameObject diff_progres;
-    [SerializeField] private int leven_num = 0;
+ //   [SerializeField] private int leven_num = 0;
     [SerializeField] private float min_gravity;
     [SerializeField] private float max_gravity;
     [SerializeField] private float _gravity;
     [SerializeField] private int priz_var;
     [SerializeField] private int solid_var;
-    [SerializeField] private int lives;
+ //   [SerializeField] private int lives;
     [SerializeField] private float min_time_new_block;
     [SerializeField] private float max_time_new_block;
     [SerializeField] private float time_new_block;
     [SerializeField] private int max_score;
     [SerializeField] private float score_speed;
-    [SerializeField] private float score_add = 0;//!
+ //   [SerializeField] private float score_add = 0;//!
 
 
 
@@ -128,6 +145,8 @@ public class GameManager : MonoBehaviour
         _gm = this;
     }
 
+
+
     private void Awake()
     {
         Application.targetFrameRate = 500;// 60;
@@ -137,6 +156,10 @@ public class GameManager : MonoBehaviour
         st_last_x_block = last_x_block;
 
         backPanel = Back_Panel.GetComponent<BackPanel>();
+
+
+
+        SaveManager.Load();//!!!!!!!!
 
     }
 
@@ -159,6 +182,24 @@ public class GameManager : MonoBehaviour
 
     }
 
+    private void OnDestroy()
+    {
+        SaseState();
+    }
+    private void OnApplicationFocus(bool focus)
+    {
+        SaseState();
+    }
+    private void OnApplicationPause(bool pause)
+    {
+        SaseState();
+    }
+
+    void SaseState()
+    {
+        SaveManager.Save();
+    }
+
     void InitXLines()
     {
 
@@ -179,9 +220,9 @@ public class GameManager : MonoBehaviour
     private void CaclDifficult()
     {
 
-        score_diff = math.min(math.max(score_diff, 0), max_score);
+        state.score_diff = math.min(math.max(state.score_diff, 0), max_score);
 
-        float k = ((float)(score_diff)) / (float)max_score;
+        float k = ((float)(state.score_diff)) / (float)max_score;
 
        // k = 0.4f;
         Color diff_co;
@@ -197,14 +238,6 @@ public class GameManager : MonoBehaviour
             diff_co = Color.Lerp(diff_co2, diff_co3, (k-0.5f) * 2.0f);
         }
         diff_progres.GetComponent<UnityEngine.UI.Image>().color = diff_co;
-
-
-
-
-
-
-
-       
 
         diff_progres.transform.localScale = new Vector3(k, diff_progres.transform.localScale.y, diff_progres.transform.localScale.z);
 
@@ -342,7 +375,7 @@ public class GameManager : MonoBehaviour
     void NextLevel()
     {
         AllOk();
-        leven_num++;
+        state.leven_num++;
     }
 
     void AllOk(int p_scor = 0)
@@ -448,7 +481,7 @@ public class GameManager : MonoBehaviour
             return;
         }
 
-        int idbl = leven_num % blocks_level.Count;
+        int idbl = state.leven_num % blocks_level.Count;
 
         var m = blocks_level[idbl].blocks;
 
@@ -539,9 +572,9 @@ public class GameManager : MonoBehaviour
 
         if (ok)
         {
-            score_add += score_speed;
+            state.score_add += score_speed;
 
-            cur_cror_add = math.max(1, (int)score_add);
+            cur_cror_add = math.max(1, (int)state.score_add);
 
             if (bonus == -9999999)
             {
@@ -556,14 +589,14 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            if (score_add > 0)
+            if (state.score_add > 0)
             {
                 //score_add *= 0.5f;
-                score_add = 0;
+                state.score_add = 0;
             }
-            score_add -= score_speed;
+            state.score_add -= score_speed;
 
-            cur_cror_add = math.min(-1, (int)score_add);
+            cur_cror_add = math.min(-1, (int)state.score_add);
 
 
             if (bonus == -9999999)
@@ -580,15 +613,15 @@ public class GameManager : MonoBehaviour
 
         if (bonus == -9999999)
         {
-            score += cur_cror_add;
+            state.score += cur_cror_add;
         }
         else
         {
-            score += bonus;
+            state.score += bonus;
         }
 
 
-        score_diff += cur_cror_add;
+        state.score_diff += cur_cror_add;
 
         CaclDifficult();
 
@@ -619,7 +652,7 @@ public class GameManager : MonoBehaviour
     float dtk = 0;
     private void DrawScore()
     {
-        if (draw_score == score)
+        if (draw_score == state.score)
         {
             dtk = 0;
             return;
@@ -629,7 +662,7 @@ public class GameManager : MonoBehaviour
 
         if (dtk == 0)
         {
-            dtk = sec_scor_add_end / (float)(score - draw_score);
+            dtk = sec_scor_add_end / (float)(state.score - draw_score);
         }
         else
         if (dts < dtk) //0.1f)
@@ -638,7 +671,7 @@ public class GameManager : MonoBehaviour
         }
         dts = 0;
 
-        if (draw_score < score)
+        if (draw_score < state.score)
         {
             draw_score++;
         }
@@ -1027,6 +1060,9 @@ public class GameManager : MonoBehaviour
 
 
 
+
+
+ 
 
 }
 

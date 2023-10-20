@@ -1,8 +1,14 @@
-using System.Collections;
+//using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Unity.Mathematics;
-using Unity.VisualScripting;
+//using Unity.VisualScripting;
+using System.Xml.Serialization;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System;
+using System.Linq.Expressions;
 
 public enum SmoothType { Linear, InOut, In, Out }
 
@@ -40,7 +46,7 @@ public struct RendererItem
     public Color color;
 }
 
-public class StaticLib
+public static class StaticLib
 {
     public static float SmoothedLerp(float i1, float i2, float t, SmoothType type)
     {
@@ -87,7 +93,7 @@ public class StaticLib
 
     public static void ChangeAlpha(List<RendererItem> renderers, float alphaVal, SmoothType type)
     {
-        foreach(RendererItem item in renderers)
+        foreach (RendererItem item in renderers)
         {
             ChangeAlpha(item, alphaVal, type);
         }
@@ -95,7 +101,7 @@ public class StaticLib
 
     public static void ChangeAlpha(RendererItem ri, float p_alphaVal, SmoothType type)
     {
-        float alphaVal= Smoothed(p_alphaVal, type);
+        float alphaVal = Smoothed(p_alphaVal, type);
 
         if (alphaVal == 0)
         {
@@ -106,10 +112,10 @@ public class StaticLib
             ri.renderer.enabled = true;
             ri.material.color = ri.color;
             ri.material.SetFloat("_Surface", ri.renderer_stares._Surface);
-            ri.material.SetFloat("_Blend", ri.renderer_stares._Blend);      
+            ri.material.SetFloat("_Blend", ri.renderer_stares._Blend);
             ri.material.SetInt("_SrcBlend", ri.renderer_stares._SrcBlend);
             ri.material.SetInt("_DstBlend", ri.renderer_stares._DstBlend);
-            ri.material.SetInt("_ZWrite", ri.renderer_stares._ZWrite);       
+            ri.material.SetInt("_ZWrite", ri.renderer_stares._ZWrite);
             ri.material.renderQueue = ri.renderer_stares.renderQueue;
 
             //   ri.material.SetOverrideTag("RenderType", "Transparent"); //--------------
@@ -120,7 +126,7 @@ public class StaticLib
             ri.renderer.enabled = true;
             ri.material.color = new Color(ri.color.r, ri.color.g, ri.color.b, alphaVal);
 
-            if(ri.renderer_stares._Surface!=1.0f)
+            if (ri.renderer_stares._Surface != 1.0f)
                 ri.material.SetFloat("_Surface", 1.0f);
             if (ri.renderer_stares._Blend != 0.0f)
                 ri.material.SetFloat("_Blend", 0.0f);
@@ -133,8 +139,8 @@ public class StaticLib
             if (ri.renderer_stares.renderQueue != (int)UnityEngine.Rendering.RenderQueue.Transparent)
                 ri.material.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Transparent;
 
-         //   ri.material.SetOverrideTag("RenderType", "Transparent"); //--------------
-         //   ri.material.DisableKeyword("_ALPHAPREMULTIPLY_ON");//--------
+            //   ri.material.SetOverrideTag("RenderType", "Transparent"); //--------------
+            //   ri.material.DisableKeyword("_ALPHAPREMULTIPLY_ON");//--------
 
         }
 
@@ -156,6 +162,80 @@ public class StaticLib
         renderer.material.DisableKeyword("_ALPHAPREMULTIPLY_ON");
         renderer.material.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Transparent;
         //renderer.material.SetShaderPassEnabled("ShadowCaster", false);
+    }
+
+
+
+    public static string Serialize<T>(this T toSerialize)
+    {
+        XmlSerializer xml = new XmlSerializer(typeof(T));
+        StringWriter sw = new StringWriter();
+        xml.Serialize(sw, toSerialize);
+        return sw.ToString();
+    }
+
+    public static T Deserialize<T>(this string toDeserialize)
+    {
+        XmlSerializer xml = new XmlSerializer(typeof(T));
+        StringReader sr = new StringReader(toDeserialize);
+        return (T)xml.Deserialize(sr);
+    }
+
+
+}
+
+class MapperFactory
+{
+    public static Action<P, Q> CreateMapper<P, Q>()
+    {
+        var sourceType = typeof(P);
+        var targetType = typeof(Q);
+
+        var sourceProperties = GetVisibleProperties(sourceType);
+        var targetProperties = GetVisibleProperties(targetType);
+
+        var fromVar = Expression.Variable(sourceType, "from");
+        var toVar = Expression.Variable(targetType, "to");
+
+        Expression CreateCopyProperty(string name)
+        {
+            try
+            {
+                return Expression.Assign(
+                    Expression.Property(toVar, targetProperties[name]),
+                    Expression.Property(fromVar, sourceProperties[name]));
+            }
+            catch (Exception ex)
+            {
+                throw new ArgumentException($"Невозможно скопировать свойство {name}", ex);
+            }
+        }
+
+        var commonProperties = sourceProperties.Keys.Intersect(targetProperties.Keys)
+                                                    .OrderBy(n => n);
+        var assignExpressions = commonProperties.Select(CreateCopyProperty);
+        var assignment = Expression.Block(assignExpressions);
+        var lambda = Expression.Lambda<Action<P, Q>>(assignment, fromVar, toVar);
+        return lambda.Compile();
+    }
+
+    static Dictionary<string, PropertyInfo> GetVisibleProperties(Type type)
+    {
+        IEnumerable<Type> GetTypeChain(Type t) =>
+            t == null ? Enumerable.Empty<Type>() : GetTypeChain(t.BaseType).Prepend(t);
+
+        Dictionary<string, PropertyInfo> result = new Dictionary<string, PropertyInfo>();
+        foreach (var t in GetTypeChain(type))
+        {
+            var properties = t.GetProperties(BindingFlags.Instance |
+                                        BindingFlags.Public | BindingFlags.DeclaredOnly);
+            foreach (var prop in properties)
+            {
+                if (!result.ContainsKey(prop.Name))
+                    result.Add(prop.Name, prop);
+            }
+        }
+        return result;
     }
 
 }
