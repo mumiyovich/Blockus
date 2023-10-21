@@ -848,11 +848,11 @@ PlayerSettings:
   m_MobileRenderingPath: 1
   metroPackageName: Test001
   metroPackageVersion: 1.0.0.0
-  metroCertificatePath: 
+  metroCertificatePath: Assets/WSATestCertificate.pfx
   metroCertificatePassword: 
-  metroCertificateSubject: 
-  metroCertificateIssuer: 
-  metroCertificateNotAfter: 0000000000000000
+  metroCertificateSubject: DefaultCompany
+  metroCertificateIssuer: DefaultCompany
+  metroCertificateNotAfter: 002aeb9c4323db01
   metroApplicationDescription: Blockus
   wsaImages: {}
   metroTileShortName: Blockus
