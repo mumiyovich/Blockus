@@ -4,6 +4,7 @@ using System.Collections.Generic;
 //using UnityEditor.PackageManager.UI;
 //using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class blokus_logo : MonoBehaviour
 {
@@ -48,9 +49,19 @@ public class blokus_logo : MonoBehaviour
     void Start()
     {
         samples = new float[samples_count];
-
     }
-    
+
+    public void StartNewGame()
+    {
+        SaveManager.Clear();
+        SceneManager.LoadScene(1);
+    }
+
+    public void ContinueGame()
+    {     
+        SceneManager.LoadScene(1);
+    }
+
 
 
     // Update is called once per frame

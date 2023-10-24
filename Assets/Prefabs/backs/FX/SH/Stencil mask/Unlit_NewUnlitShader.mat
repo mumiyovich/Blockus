@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Unlit_NewUnlitShader
-  m_Shader: {fileID: 4800000, guid: 586538d4ad961c945b037d1f1ec68e25, type: 3}
+  m_Shader: {fileID: 4800000, guid: de6115aac2277f1479fdc09deb9be268, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -32,13 +32,13 @@ Material:
     m_Ints:
     - _count: 1
     m_Floats:
-    - _balance: 0.464
+    - _balance: 0.529
     - _count: 1.33
     - _dither64: 1
     - _k_y: 0.1
     - _max: 1
     - _min: 0
-    - _progress: 1
+    - _progress: 0.282
     - _s: -1.57
     - _speed: 14
     - _step: 0

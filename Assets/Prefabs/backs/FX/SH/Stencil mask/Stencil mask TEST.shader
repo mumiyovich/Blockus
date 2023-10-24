@@ -19,7 +19,12 @@ Shader "Pi/Stencil mask/Stencil mask TEST"
     {
         Tags { "RenderType"="Opaque" }
         LOD 100
+        /*
+        GrabPass
+        {
 
+        }
+        */
         Pass
         {
             CGPROGRAM
@@ -49,7 +54,10 @@ Shader "Pi/Stencil mask/Stencil mask TEST"
             float _texel_size;
             bool _dither64;
             bool _use_dither;
-
+            /*
+            sampler2D _GrabTexture;
+            float4 _GrabTexture_TexelSize;
+            */
             v2f vert (appdata v)
             {
                 v2f o;
@@ -113,6 +121,10 @@ Shader "Pi/Stencil mask/Stencil mask TEST"
 
 
                float4 col = tex2D(_MainTex, i.uv,0,0);
+
+             //  col = tex2D(_GrabTexture, i.uv*2);
+
+
                //float4 col = tex2Dlod(_MainTex, float4(i.uv, 0, 0));
                
 

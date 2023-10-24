@@ -6,6 +6,10 @@ using UnityEngine;
 public class State
 {
     [SerializeField]
+    private int _time;
+    public int time { get { return _time; } set { _time = value; } }
+
+    [SerializeField]
     private int _score;
     public int score { get { return _score; } set { _score = value; } }
 
