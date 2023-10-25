@@ -117,6 +117,7 @@ Shader "Pi/Stencil mask/Stencil mask TEST"
                       _texel_size = _ScreenParams.x;
                     }
                     i.uv = floor(i.uv*_texel_size)/_texel_size; 
+
                 }
 
 
@@ -128,7 +129,9 @@ Shader "Pi/Stencil mask/Stencil mask TEST"
                //float4 col = tex2Dlod(_MainTex, float4(i.uv, 0, 0));
                
 
-               float c = (col.r+col.g+col.b)*0.333334;
+              // float c = (col.r+col.g+col.b)*0.333334;
+
+               float c = 0.3*col.r+0.59*col.g+0.11*col.b;
 
                float min_;
                float max_;

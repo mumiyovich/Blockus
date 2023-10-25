@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using Unity.Mathematics;
 //using Unity.VisualScripting;
-using System.Xml.Serialization;
-using System.IO;
+//using System.Xml.Serialization;
+//using System.IO;
 using System.Linq;
 using System.Reflection;
 using System;
@@ -165,7 +165,7 @@ public static class StaticLib
     }
 
 
-
+/*
     public static string Serialize<T>(this T toSerialize)
     {
         XmlSerializer xml = new XmlSerializer(typeof(T));
@@ -180,6 +180,7 @@ public static class StaticLib
         StringReader sr = new StringReader(toDeserialize);
         return (T)xml.Deserialize(sr);
     }
+    */
 
 
 }

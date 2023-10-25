@@ -877,11 +877,11 @@ public class GameManager : MonoBehaviour
         if (t2 != null)
         {
             t2.position = new Vector3(xt1, t2.position.y, t2.position.z);
-            DrawSwap(t1, t2, (x_lines[i1] + x_lines[i2]) * 0.5f);
+            DrawSwap(t1, t2, p);// (x_lines[i1] + x_lines[i2]) * 0.5f);
         }
         else
         {
-            DrawSwap(t1, t2, x_lines[i1]);
+            DrawSwap(t1, t2, p);// x_lines[i1]);
         }
 
 
@@ -1066,6 +1066,7 @@ public class GameManager : MonoBehaviour
 
         }
     */
+    /*
     private void DrawSwap(Transform t1, Transform t2, float x)
     {
         float y;
@@ -1083,6 +1084,14 @@ public class GameManager : MonoBehaviour
         }
 
         Instantiate(ParticleSwop, new Vector3(x, y, 0), new Quaternion());
+
+    }
+    */
+
+    private void DrawSwap(Transform t1, Transform t2, Vector3 p)
+    {
+
+        Instantiate(ParticleSwop, p, new Quaternion());
 
     }
 
