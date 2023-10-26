@@ -32,6 +32,8 @@ public class blokus_logo : MonoBehaviour
     [SerializeField] private GameObject visAudio2;
     [SerializeField] private GameObject visAudio3;
 
+    [SerializeField] private GameObject hiScores;
+
 
     private float max1 = 0;
     private float max2 = 0;
@@ -60,6 +62,11 @@ public class blokus_logo : MonoBehaviour
     public void ContinueGame()
     {     
         SceneManager.LoadScene(1);
+    }
+
+    public void HiScores()
+    {
+        Instantiate(hiScores);
     }
 
 
