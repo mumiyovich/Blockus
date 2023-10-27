@@ -10,6 +10,7 @@ using Unity.Services.CloudSave;
 
 
 
+
 //https://docs.unity.com/ugs/en-us/manual/cloud-save/manual/tutorials/unity-sdk-sample
 //https://docs.unity.com/ugs/en-us/manual/authentication/manual/platform-signin-username-password
 
@@ -27,6 +28,10 @@ public class Cloud
     public string playerId { get; private set; }
 
     public List<UserCloudItem> userCloudItems { get; private set; } = new List<UserCloudItem>();
+
+    public List<UserCloudItem> userItemsScore { get; private set; } = new List<UserCloudItem>();
+    public List<UserCloudItem> userItemsTime { get; private set; } = new List<UserCloudItem>();
+    public List<UserCloudItem> userItemsRating { get; private set; } = new List<UserCloudItem>();
 
     public Cloud()
     {
@@ -79,11 +84,42 @@ public class Cloud
     async Task GetDataToList()
     {
         userCloudItems.Clear();
+        userItemsScore.Clear();
+        userItemsTime.Clear();
+        userItemsRating.Clear();
+
         var results = await CloudSaveService.Instance.Data.Player.LoadAllAsync();
         foreach (var result in results)
         {
             userCloudItems.Add(result.Value.Value.GetAs<UserCloudItem>());
         }
+
+        SortLists();
+    }
+
+    public void SortLists()
+    {
+        userItemsScore = new List<UserCloudItem>(userCloudItems);
+        userItemsTime = new List<UserCloudItem>(userCloudItems);
+        userItemsRating = new List<UserCloudItem>(userCloudItems);
+
+        userItemsScore.Sort(delegate (UserCloudItem x, UserCloudItem y)
+        {
+            return y.score.CompareTo(x.score);
+        });
+
+        userItemsTime.Sort(delegate (UserCloudItem x, UserCloudItem y)
+        {
+            return y.time.CompareTo(x.time);
+        });
+
+        userItemsRating.Sort(delegate (UserCloudItem x, UserCloudItem y)
+        {
+            return y.GetRating().CompareTo(x.GetRating());
+        });
+
+
+
     }
 
     //****************************************************************************************
@@ -97,7 +133,7 @@ public class Cloud
 
     async Task SaveDataToCloud(UserCloudItem item)
     {
-        string key = playerId + "_" + item.name;
+        string key = playerId + "_" + item.name.Replace(" ","_");
         item.id = playerId;
         var data = new Dictionary<string, object> { { key, item } };
 
@@ -132,4 +168,9 @@ public struct UserCloudItem
     public string id;
     public int time;
     public int score;
+
+    public float GetRating()
+    {
+        return 60.0f * (float)score / (float)time;
+    }
 }

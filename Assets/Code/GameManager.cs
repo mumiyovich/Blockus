@@ -1,4 +1,4 @@
-using NUnit.Framework;
+
 using Pixeye.Unity;
 using System;
 using System.Collections;
@@ -8,10 +8,10 @@ using System.Collections.Generic;
 //using System.Drawing;
 using TMPro;
 using Unity.Mathematics;
-using Unity.VisualScripting;
 //using Unity.VisualScripting;
 //using UnityEditor.PackageManager;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 //using UnityEngine.SocialPlatforms.Impl;
 //using UnityEngine.UIElements;
 //using UnityEngine.XR;
@@ -315,10 +315,14 @@ public class GameManager : MonoBehaviour
         if (((int)(_float_game_time_sec)) > state.time)
         {
             state.time = (int)(_float_game_time_sec);
+            /*
             int h = (int)(state.time / 3600);
             int m = (int)(state.time / 60 - h * 60);
             int c = (int)(state.time - m * 60 - h * 60);
             text_time.text = (h < 100 ? h.ToString("D2") : h.ToString()) + ":" + m.ToString("D2") + ":" + c.ToString("D2");
+            */
+
+            text_time.text = StaticLib.TimeSecToStr(state.time);
         }
 
 
@@ -368,6 +372,12 @@ public class GameManager : MonoBehaviour
         if (Input.GetKeyUp(KeyCode.A))
         {
             backPanel.NewBack();
+        }
+
+        if (Input.GetKeyUp(KeyCode.Escape))
+        {
+            SaseState();
+            SceneManager.LoadScene(0);
         }
 
 

@@ -6,6 +6,21 @@ using UnityEngine;
 public class State
 {
     [SerializeField]
+    private string _name;
+    public string name
+    {
+        get
+        {
+            if(_name == null) return "";
+            return _name; 
+        }
+        set
+        { 
+            _name = value; 
+        }
+    }
+
+    [SerializeField]
     private int _time;
     public int time { get { return _time; } set { _time = value; } }
 
@@ -27,7 +42,7 @@ public class State
 
     [SerializeField]
     private int _count_x_block;
-    public int count_x_block { get { return _count_x_block; } set { if(value>0)_count_x_block = value; } }
+    public int count_x_block { get { return _count_x_block; } set { if (value > 0) _count_x_block = value; } }
 
 }
 
