@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using Unity.Mathematics;
 //using Unity.VisualScripting;
-using System.Xml.Serialization;
-using System.IO;
+//using System.Xml.Serialization;
+//using System.IO;
 using System.Linq;
 using System.Reflection;
 using System;
@@ -76,6 +76,14 @@ public static class StaticLib
         }
 
         return v;
+    }
+
+    public static string TimeSecToStr(int time)
+    {
+        int h = time / 3600;
+        int m = time / 60 - h * 60;
+        int c = time - m * 60 - h * 3600;
+        return (h < 100 ? h.ToString("D2") : h.ToString()) + ":" + m.ToString("D2") + ":" + c.ToString("D2");
     }
 
     public static void SetLayer(GameObject go, int layer)
@@ -165,7 +173,7 @@ public static class StaticLib
     }
 
 
-
+/*
     public static string Serialize<T>(this T toSerialize)
     {
         XmlSerializer xml = new XmlSerializer(typeof(T));
@@ -180,6 +188,7 @@ public static class StaticLib
         StringReader sr = new StringReader(toDeserialize);
         return (T)xml.Deserialize(sr);
     }
+    */
 
 
 }

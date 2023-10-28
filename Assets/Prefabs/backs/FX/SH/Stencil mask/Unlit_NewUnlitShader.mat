@@ -31,17 +31,17 @@ Material:
     m_Ints:
     - _count: 1
     m_Floats:
-    - _balance: 0.638
+    - _balance: 0.5
     - _count: 1.33
     - _dither64: 1
     - _k_y: 0.1
     - _max: 1
     - _min: 0
-    - _progress: 0.499
+    - _progress: 0.282
     - _s: -1.57
     - _speed: 14
     - _step: 0
-    - _texel_size: 30.7
+    - _texel_size: 20.8
     - _time: 0
     - _use_dither: 0
     m_Colors: []

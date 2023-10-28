@@ -49,7 +49,9 @@ namespace CartoonFX
 
             // Background image
             root.style.backgroundImage = new StyleBackground(AssetDatabase.LoadAssetAtPath<Texture2D>(AssetDatabase.GUIDToAssetPath("fed1b64fd853f994c8d504720a0a6d44")));
+#pragma warning disable CS0618 // Тип или член устарел
             root.style.unityBackgroundScaleMode = ScaleMode.ScaleAndCrop;
+#pragma warning restore CS0618 // Тип или член устарел
 
             // Logo image
             var titleImage = root.Q<Image>("img_title");

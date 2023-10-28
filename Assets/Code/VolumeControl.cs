@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
 
-public class VolumeContrul : MonoBehaviour
+public class VolumeControl : MonoBehaviour
 {
     public AudioMixer audioMixer;
 

@@ -1,5 +1,7 @@
+
 using Pixeye.Unity;
 using System;
+using System.Collections;
 //using System.Collections;
 using System.Collections.Generic;
 //using System.Linq;
@@ -9,6 +11,7 @@ using Unity.Mathematics;
 //using Unity.VisualScripting;
 //using UnityEditor.PackageManager;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 //using UnityEngine.SocialPlatforms.Impl;
 //using UnityEngine.UIElements;
 //using UnityEngine.XR;
@@ -24,11 +27,11 @@ public class GameManager : MonoBehaviour
     private bool start = true;
     private float _cam_sh = 0;
     private float _k_cam = 0.1f;
- //   private int score = 0;
+    //   private int score = 0;
     private int draw_score = 0;
-//    private int score_diff = 0;
+    //    private int score_diff = 0;
     private float[] x_lines;
-    private float sec_scor_add_end = 1.0f;
+    [SerializeField] private float sec_scor_add_end = 1.0f;
     private bool is_paused = false;
     private bool first = true;
 
@@ -68,13 +71,14 @@ public class GameManager : MonoBehaviour
     }
 
     [Foldout("Objects blocks:", true)]
-   // [Header("Objects blocks:")]
+    // [Header("Objects blocks:")]
     [SerializeField] private List<Blocks_level> blocks_level;
 
     [Foldout("Texts:", true)]
-   // [Header("Texts:")]
-    [SerializeField] private TextMeshProUGUI tekst_sc;
-    [SerializeField] private TextMeshProUGUI tekst_score;
+    // [Header("Texts:")]
+    [SerializeField] private TextMeshProUGUI text_tmp;
+    [SerializeField] private TextMeshProUGUI text_score;
+    [SerializeField] private TextMeshProUGUI text_time;
 
 
 
@@ -121,24 +125,26 @@ public class GameManager : MonoBehaviour
     [Foldout("Difficult:", true)]
     //[Header("Difficult:")]
     [SerializeField] private GameObject diff_progres;
- //   [SerializeField] private int leven_num = 0;
+    //   [SerializeField] private int leven_num = 0;
     [SerializeField] private float min_gravity;
     [SerializeField] private float max_gravity;
     [SerializeField] private float _gravity;
     [SerializeField] private int priz_var;
     [SerializeField] private int solid_var;
- //   [SerializeField] private int lives;
+    //   [SerializeField] private int lives;
     [SerializeField] private float min_time_new_block;
     [SerializeField] private float max_time_new_block;
     [SerializeField] private float time_new_block;
     [SerializeField] private int max_score;
     [SerializeField] private float score_speed;
- //   [SerializeField] private float score_add = 0;//!
+    //   [SerializeField] private float score_add = 0;//!
 
 
 
     [HideInInspector] public static GameManager _gm;
 
+
+    private Coroutine coroutineProcessDrawScore;
 
     public GameManager()
     {
@@ -180,6 +186,8 @@ public class GameManager : MonoBehaviour
         DrawScore();
         CaclDifficult();
 
+        _float_game_time_sec = state.time;
+
     }
 
     private void OnDestroy()
@@ -207,7 +215,7 @@ public class GameManager : MonoBehaviour
         float ofx = (1.0f - scale_block) * 0.5f;
         first_x_block = st_first_x_block - ofx;
         last_x_block = st_last_x_block + ofx;
-        
+
 
         x_lines = new float[count_x_block];
         for (int i = 0; i < count_x_block; i++)
@@ -224,18 +232,18 @@ public class GameManager : MonoBehaviour
 
         float k = ((float)(state.score_diff)) / (float)max_score;
 
-       // k = 0.4f;
+        // k = 0.4f;
         Color diff_co;
         Color diff_co1 = new Color(0, 0.8051351f, 0.8392157f);
         Color diff_co2 = new Color(0.8310356f, 0.8396226f, 0);
         Color diff_co3 = new Color(0.6792453f, 0.1765224f, 0);
-        if(k<=0.5f)
+        if (k <= 0.5f)
         {
             diff_co = Color.Lerp(diff_co1, diff_co2, k * 2.0f);
         }
         else
         {
-            diff_co = Color.Lerp(diff_co2, diff_co3, (k-0.5f) * 2.0f);
+            diff_co = Color.Lerp(diff_co2, diff_co3, (k - 0.5f) * 2.0f);
         }
         diff_progres.GetComponent<UnityEngine.UI.Image>().color = diff_co;
 
@@ -282,11 +290,14 @@ public class GameManager : MonoBehaviour
 
         }
 
-        tekst_sc.text = "FPS:" + fps.ToString() + " MIN:" + min_fps + " MAX:" + max_fps;
+        text_tmp.text = "FPS:" + fps.ToString() + " MIN:" + min_fps + " MAX:" + max_fps;
 
     }
 
     float time_level_change = 0;
+
+
+    float _float_game_time_sec = 0;
 
     void Update()
     {
@@ -299,7 +310,20 @@ public class GameManager : MonoBehaviour
         DrFPS();
 
 
+        _float_game_time_sec += Time.deltaTime;
 
+        if (((int)(_float_game_time_sec)) > state.time)
+        {
+            state.time = (int)(_float_game_time_sec);
+            /*
+            int h = (int)(state.time / 3600);
+            int m = (int)(state.time / 60 - h * 60);
+            int c = (int)(state.time - m * 60 - h * 60);
+            text_time.text = (h < 100 ? h.ToString("D2") : h.ToString()) + ":" + m.ToString("D2") + ":" + c.ToString("D2");
+            */
+
+            text_time.text = StaticLib.TimeSecToStr(state.time);
+        }
 
 
 
@@ -327,7 +351,7 @@ public class GameManager : MonoBehaviour
         {
             CheckTap();
 
-          //  backPanel.ChangeMesh();
+            //  backPanel.ChangeMesh();
         }
 
         if (blocks_in_down.Count == count_x_block)
@@ -350,21 +374,27 @@ public class GameManager : MonoBehaviour
             backPanel.NewBack();
         }
 
+        if (Input.GetKeyUp(KeyCode.Escape))
+        {
+            SaseState();
+            SceneManager.LoadScene(0);
+        }
+
 
         ///////!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         time_level_change += Time.deltaTime;
-        if(time_level_change >= 60*3)
+        if (time_level_change >= 60 * 3)
         {
             time_level_change = 0;
 
-            
+
             backPanel.NewBack();
-            
+
             NextLevel();
             count_x_block++;
             if (count_x_block == 8)
                 count_x_block = 3;
-            
+
 
 
         }
@@ -383,7 +413,7 @@ public class GameManager : MonoBehaviour
 
         foreach (Transform child in AllObgects.transform)
         {
-            BlocksOk(child, child, true, p_scor);         
+            BlocksOk(child, child, true, p_scor);
             Destroy(child.gameObject);
 
         }
@@ -409,7 +439,7 @@ public class GameManager : MonoBehaviour
         {
             foreach (KeyValuePair<GameObject, BlockNode> bl in blocks_in_down)
             {
-                BlocksOk(bl.Key.transform, bl.Key.transform, true, 50);
+                BlocksOk(bl.Key.transform, bl.Key.transform, true, count_x_block * 10);
                 bl.Value.collected = true;
                 Destroy(bl.Key);
             }
@@ -420,7 +450,7 @@ public class GameManager : MonoBehaviour
         {
             foreach (KeyValuePair<GameObject, BlockNode> bl in blocks_in_down)
             {
-                BlocksOk(bl.Key.transform, bl.Key.transform, true, 200);
+                BlocksOk(bl.Key.transform, bl.Key.transform, true, count_x_block * 30);
                 bl.Value.collected = true;
                 Destroy(bl.Key);
             }
@@ -476,7 +506,7 @@ public class GameManager : MonoBehaviour
         tmp = true;
         //*/
 
-        if (AllObgects.transform.childCount >= count_x_block*10)
+        if (AllObgects.transform.childCount >= count_x_block * 10)
         {
             return;
         }
@@ -522,7 +552,7 @@ public class GameManager : MonoBehaviour
 
             blnod.ParticlePriz.SetActive(true);
         }
-        else if(isolid)
+        else if (isolid)
         {
             (Instantiate(SolidBlock) as GameObject).transform.parent = mt;
             blnod.type = -2;
@@ -592,7 +622,8 @@ public class GameManager : MonoBehaviour
             if (state.score_add > 0)
             {
                 //score_add *= 0.5f;
-                state.score_add = 0;
+                //state.score_add = 0;
+                state.score_add = -state.score_add;
             }
             state.score_add -= score_speed;
 
@@ -648,6 +679,57 @@ public class GameManager : MonoBehaviour
 
 
 
+    private void DrawScore()
+    {
+        if (draw_score == state.score)
+            return;
+
+        if (coroutineProcessDrawScore != null)
+            StopCoroutine(coroutineProcessDrawScore);
+
+        coroutineProcessDrawScore = StartCoroutine(routine: ProcessDrawScore());
+
+    }
+
+    private IEnumerator ProcessDrawScore()
+    {
+        float old_score = draw_score;
+        draw_score = state.score;
+        float new_score = 0;
+
+        float t = 0;
+
+        float sp = math.min((math.abs(state.score - old_score) / 5.0f), 1);
+        sp = sp * sec_scor_add_end + 0.01f;
+
+        do
+        {
+            t += Time.deltaTime / sp;
+            t = math.min(t, 1);
+
+            new_score = StaticLib.SmoothedLerp(old_score, state.score, t, SmoothType.In);
+            text_score.text = ((int)math.abs(new_score)).ToString("D12");
+
+            if (new_score > 0)
+            {
+                text_score.color = new Color(0.5330188f, 1.0f, 0.6825123f);
+            }
+            else if (new_score < 0)
+            {
+                text_score.color = new Color(1.0f, 0.5f, 0.5f); ;
+            }
+            else
+            {
+                text_score.color = Color.white;
+            }
+
+            yield return null;
+        } while (t < 1);
+
+        yield break;
+    }
+
+    /*
     float dts = 0;
     float dtk = 0;
     private void DrawScore()
@@ -698,7 +780,7 @@ public class GameManager : MonoBehaviour
 
         dtk *= 0.75f;
     }
-
+    */
     private Vector3 MouseToScren()
     {
         Camera cam = Camera.main;
@@ -711,276 +793,290 @@ public class GameManager : MonoBehaviour
         return p;
     }
 
+
+
     private void CheckTap()
     {
         Vector3 p = MouseToScren();
 
-        if (start_y_block - p.y < 0.5f)
-            return;
+        Transform t1 = null;
+        Transform t2 = null;
+        float x, y_new, y_old, dist_new, dist_old;
+        int ax = 0;
 
-        Transform tl = null;
-        Transform tr = null;
-        float y, x;
-        float tl_d = 999999;
-        float tr_d = 999999;
 
-        int i1 = 0;
-        int i2 = 0;
-        int ii = -1;
+        bool click_in_up = (p.y - (down_panel.transform.position.y + down_panel_height)) >= height_down_line * scale_block;
 
-        float dist1;
-        float dist2;
-
-        bool click_in_up = (p.y - (down_panel.transform.position.y + down_panel_height)) >= height_down_line *scale_block;
 
         foreach (Transform child in AllObgects.transform)
         {
-
-            if(click_in_up)
-            {
-                if(child.position.y - (down_panel.transform.position.y + down_panel_height) < height_down_line * scale_block)
-                {
-                    continue;
-                }
-            }
-
-           // float dist_to_panel = transform.position.y - down_panel.transform.position.y;
-
-            /*
-            y = child.position.y - p.y;
-
-            
-            if (y * y > 0.5f * 0.5f)
+            if (math.abs(child.position.y - start_y_block) < scale_block * 0.5f)
                 continue;
-            */
 
             x = child.position.x - p.x;
 
-            dist1 = Vector2.Distance(new Vector2(child.position.x, child.position.y), new Vector2(p.x, p.y));
-
-            if (x > 0)
+            if (t1 == null)
             {
-                if (tr == null)
-                {
-                    tr = child;
-                }
-                else
-                {
-                    dist2 = Vector2.Distance(new Vector2(tr.position.x, tr.position.y), new Vector2(p.x, p.y));
-                    if (dist1 < dist2)
-                        tr = child;
-
-                    /*
-                    if (child.position.x < tr.position.x)                
-                        tr = child;
-                    */
-                }
-                tr_d = math.min(tr_d, math.abs(x));
+                t1 = child;
+                ax = x > 0 ? -1 : 1;
             }
             else
-            if (x < 0)
             {
-                if (tl == null)
-                {
-                    tl = child;
-                }
-                else
-                {
-                    dist2 = Vector2.Distance(new Vector2(tl.position.x, tl.position.y), new Vector2(p.x, p.y));
-                    if (dist1 < dist2)
-                        tl = child;
+                y_new = p.y - child.position.y;
+                y_old = p.y - t1.position.y;
+                dist_new = Vector2.Distance(new Vector2(child.position.x, child.position.y), new Vector2(p.x, p.y));
+                dist_old = Vector2.Distance(new Vector2(t1.position.x, t1.position.y), new Vector2(p.x, p.y));
 
-                    /*
-                    if (child.position.x > tl.position.x)
-                        tl = child;
-                    */
+                if (y_new < 0 && y_old > 0 && dist_old > scale_block)
+                {
+                    t1 = child;
+                    ax = x > 0 ? -1 : 1;
                 }
-                tl_d = math.min(tl_d, math.abs(x));
-            }
-        }
+                else if (y_new > 0 && y_old < 0 && dist_new > scale_block)
+                {
 
-        if (tl != null && tr != null)
-        {
-            y = tl.position.y - tr.position.y;
-            if (y * y > 1.0f)
-            {
-                if (math.abs(tl.position.y - p.y) < math.abs(tr.position.y - p.y))
-                {
-                    tr = null;
                 }
-                else
+                else if (dist_new < dist_old)
                 {
-                    tl = null;
+                    t1 = child;
+                    ax = x > 0 ? -1 : 1;
                 }
             }
         }
 
-        if (tl == null && tr == null)
-        {
+        if (t1 == null)
             return;
-        }
-        else if (tl != null && tr != null)
-        {
 
-
-            i1 = Array.IndexOf(x_lines, tl.position.x);
-            i2 = Array.IndexOf(x_lines, tr.position.x);
-
-            if (math.abs(i2 - i1) == 1)
-            {
-                x = tl.position.x;
-                tl.position = new Vector3(tr.position.x, tl.position.y, tl.position.z);
-                tr.position = new Vector3(x, tr.position.y, tr.position.z);
-
-                DrawSwap(tl, tr, (x_lines[i1] + x_lines[i2]) * 0.5f);
-                return;
-            }
-
-            if (tl_d < tr_d)
-                tr = null;
-            else
-                tl = null;
-
-        }
-
-        tl = (tl == null) ? tr : tl;
-
-        ii = Array.IndexOf(x_lines, tl.position.x);
-
-        int nx = -1;
+        int i1 = Array.IndexOf(x_lines, t1.position.x);
+        int i2 = 0;
         float min_x = 999999;
         float n_x;
-
         for (int i = 0; i < count_x_block; i++)
         {
             n_x = x_lines[i] - p.x;
             n_x *= n_x;
             if (n_x < min_x)
             {
-                nx = i;
+                i2 = i;
                 min_x = n_x;
             }
         }
 
-        if (ii == nx)
+        if (i1 == i2)
         {
-            x = tl.position.x - p.x;
+            i2 = math.max(math.min(i2 + ax, count_x_block - 1), 0);
+        }
 
-            if (x < 0)
+        float pos_x = x_lines[i2];
+
+        foreach (Transform child in AllObgects.transform)
+        {
+            if (child == t1)
+                continue;
+
+            if (child.position.x == pos_x)
+                if (math.abs(child.position.y - t1.position.y) <= scale_block)
+                {
+                    t2 = child;
+                    break;
+                }
+        }
+
+        float xt1 = t1.position.x;
+        t1.position = new Vector3(pos_x, t1.position.y, t1.position.z);
+        if (t2 != null)
+        {
+            t2.position = new Vector3(xt1, t2.position.y, t2.position.z);
+            DrawSwap(t1, t2, p);// (x_lines[i1] + x_lines[i2]) * 0.5f);
+        }
+        else
+        {
+            DrawSwap(t1, t2, p);// x_lines[i1]);
+        }
+
+
+
+    }
+
+    /*
+        private void CalcOnTapObj(ref Transform t, Transform child, ref float t_d, Vector3 p, float x)
+        {
+
+            if (t == null)
             {
-                nx++;
+                t = child;
             }
             else
             {
-                nx--;
-            }
 
-            nx = math.min(math.max(nx, 0), count_x_block - 1);
+
+
+
+                float y_new = p.y - child.position.y;
+                float y_old = p.y - t.position.y;
+
+
+                if (y_new < 0 && y_old > 0 && y_old * y_old > scale_block * scale_block)
+                {
+                    t = child;
+                }
+                else
+                {
+                    float dist_new = Vector2.Distance(new Vector2(child.position.x, child.position.y), new Vector2(p.x, p.y));
+                    float dist_old = Vector2.Distance(new Vector2(t.position.x, t.position.y), new Vector2(p.x, p.y));
+                    if (dist_new < dist_old)
+                        t = child;
+                }
+
+            }
+            t_d = math.min(t_d, math.abs(x));
 
         }
 
-        tl.position = new Vector3(x_lines[nx], tl.position.y, tl.position.z);
-
-        DrawSwap(tl, tr, x_lines[nx]);
-
-    }
-    /*
         private void _CheckTap()
         {
-
-
             Vector3 p = MouseToScren();
 
-
-            int nx = -1;
-
-            for (int i = 0; i < (count_x_block - 1); i++)
-            {
-                if (p.x >= x_lines[i] && p.x < x_lines[i + 1])
-                {
-                    nx = i;
-                    break;
-                }
-            }
-
-            if (nx == -1)
-            {
+            if (start_y_block - p.y < 0.5f)
                 return;
-            }
 
+            Transform tl = null;
+            Transform tr = null;
+            float x;
+            float tl_d = 999999;
+            float tr_d = 999999;
 
-            Transform t1 = null;
-            Transform t2 = null;
+            int i1 = 0;
+            int i2 = 0;
+            int ii = -1;
+
+            // float dist1;
+            //float dist2;
+
+            bool click_in_up = (p.y - (down_panel.transform.position.y + down_panel_height)) >= height_down_line * scale_block;
 
             foreach (Transform child in AllObgects.transform)
             {
-                float x = child.position.x - x_lines[nx];
-                float y = child.position.y - p.y;
-
-                if (x * x + y * y <= 0.5f * 0.5f)
+                //float start_dist = child.position.y - start_y_block;
+                // if (start_dist * start_dist > scale_block * scale_block)
+                if (math.abs(child.position.y - start_y_block) < scale_block)
                 {
-                    t1 = child;
+                    continue;
                 }
 
 
-                x = child.position.x - x_lines[nx + 1];
-                y = child.position.y - p.y;
-
-                if (x * x + y * y <= 0.5f * 0.5f)
+                if (click_in_up)
                 {
-                    t2 = child;
+                    if (child.position.y - (down_panel.transform.position.y + down_panel_height) < height_down_line * scale_block)
+                    {
+                        continue;
+                    }
                 }
 
-                if (t1 != null && t2 != null)
-                {
-                    break;
-                }
 
+                x = child.position.x - p.x;
+
+                //
+                if (x > 0)
+                {
+                    CalcOnTapObj(ref tr, child, ref tr_d, p, x);
+                }
+                else
+                if (x < 0)
+                {
+                    CalcOnTapObj(ref tl, child, ref tl_d, p, x);
+                }
             }
 
-            if (t1 != null)
-            {
-                t1.position = new Vector3(x_lines[nx + 1], t1.position.y, t1.position.z);
 
-                if (t2 == null)
+            if (tl != null && tr != null)
+            {
+                float y = tl.position.y - tr.position.y;
+                if (y * y > scale_block * scale_block) // 1.0f)//z
                 {
-                    t2 = Collided(t1);
-                    if (t2 != null)
+                    if (math.abs(tl.position.y - p.y) < math.abs(tr.position.y - p.y))
                     {
-                        t2.position = new Vector3(x_lines[nx], t2.position.y, t2.position.z);
-                        t2 = null;
+                        tr = null;
+                    }
+                    else
+                    {
+                        tl = null;
                     }
                 }
             }
 
 
-
-
-
-            if (t2 != null)
+            if (tl == null && tr == null)
             {
-                t2.position = new Vector3(x_lines[nx], t2.position.y, t2.position.z);
+                return;
+            }
+            else if (tl != null && tr != null)
+            {
 
-                if (t1 == null)
+
+                i1 = Array.IndexOf(x_lines, tl.position.x);
+                i2 = Array.IndexOf(x_lines, tr.position.x);
+
+                if (math.abs(i2 - i1) == 1)
                 {
-                    t1 = Collided(t2);
-                    if (t1 != null)
-                    {
-                        t1.position = new Vector3(x_lines[nx + 1], t1.position.y, t1.position.z);
-                        t1 = null;
-                    }
+                    x = tl.position.x;
+                    tl.position = new Vector3(tr.position.x, tl.position.y, tl.position.z);
+                    tr.position = new Vector3(x, tr.position.y, tr.position.z);
+
+                    DrawSwap(tl, tr, (x_lines[i1] + x_lines[i2]) * 0.5f);
+                    return;
+                }
+
+                if (tl_d < tr_d)
+                    tr = null;
+                else
+                    tl = null;
+
+            }
+
+            tl = (tl == null) ? tr : tl;
+
+            ii = Array.IndexOf(x_lines, tl.position.x);
+
+            int nx = -1;
+            float min_x = 999999;
+            float n_x;
+
+            for (int i = 0; i < count_x_block; i++)
+            {
+                n_x = x_lines[i] - p.x;
+                n_x *= n_x;
+                if (n_x < min_x)
+                {
+                    nx = i;
+                    min_x = n_x;
                 }
             }
 
-
-
-            if (t1 != null || t2 != null)
+            if (ii == nx)
             {
-                DrawSwap(t1, t2, (x_lines[nx + 1] + x_lines[nx]) * 0.5f);
+                x = tl.position.x - p.x;
+
+                if (x < 0)
+                {
+                    nx++;
+                }
+                else
+                {
+                    nx--;
+                }
+
+                nx = math.min(math.max(nx, 0), count_x_block - 1);
+
             }
+
+            tl.position = new Vector3(x_lines[nx], tl.position.y, tl.position.z);
+
+            DrawSwap(tl, tr, x_lines[nx]);
 
         }
     */
+    /*
     private void DrawSwap(Transform t1, Transform t2, float x)
     {
         float y;
@@ -998,6 +1094,14 @@ public class GameManager : MonoBehaviour
         }
 
         Instantiate(ParticleSwop, new Vector3(x, y, 0), new Quaternion());
+
+    }
+    */
+
+    private void DrawSwap(Transform t1, Transform t2, Vector3 p)
+    {
+
+        Instantiate(ParticleSwop, p, new Quaternion());
 
     }
 
@@ -1062,23 +1166,23 @@ public class GameManager : MonoBehaviour
 
 
 
- 
+
 
 }
 
 
 public static class PiRND
 {
-    private static Dictionary<object,int> _probability = new Dictionary<object,int>();
+    private static Dictionary<object, int> _probability = new Dictionary<object, int>();
 
     public static void Clear()
     {
         _probability.Clear();
     }
-    
-    public static bool GetProbability(object Key, int Probability, int MinProbability=0 , int MaxProbability=0)
+
+    public static bool GetProbability(object Key, int Probability, int MinProbability = 0, int MaxProbability = 0)
     {
-        if(Probability==0)
+        if (Probability == 0)
             return false;
 
         if (MinProbability == 0)

@@ -1,9 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
+
 //using Unity.Mathematics;
 //using UnityEditor.PackageManager.UI;
 //using UnityEditor.ShaderGraph.Internal;
+using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class blokus_logo : MonoBehaviour
 {
@@ -31,6 +32,12 @@ public class blokus_logo : MonoBehaviour
     [SerializeField] private GameObject visAudio2;
     [SerializeField] private GameObject visAudio3;
 
+    [SerializeField] private GameObject hiScores;
+
+    [SerializeField] private GameObject EnterName;
+
+    [SerializeField] private TextMeshProUGUI text_name;
+
 
     private float max1 = 0;
     private float max2 = 0;
@@ -47,11 +54,61 @@ public class blokus_logo : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        DrawName();
+
         samples = new float[samples_count];
-
     }
-    
 
+    public void StartNewGame()
+    {
+        SaveManager.Clear();
+        SceneManager.LoadScene(1);
+    }
+
+    public void ContinueGame()
+    {
+        SceneManager.LoadScene(1);
+    }
+
+    public void HiScores()
+    {
+        if (SaveManager.state.name != "")
+        {
+            Instantiate(hiScores);
+            return;
+        }
+
+        GameObject estr = Instantiate(EnterName);
+        EnterString escr = estr.GetComponent<EnterString>();
+        escr.OnEnter = HiScoresEnterName;
+    }
+
+    public void HiScoresEnterName()
+    {
+        SaveManager.Save();
+        DrawName();
+        HiScores();
+    }
+
+    public void ChangeName()
+    {
+        GameObject estr = Instantiate(EnterName);
+        EnterString escr = estr.GetComponent<EnterString>();
+        escr.OnEnter = ChangeEnd;
+    }
+
+    public void ChangeEnd()
+    {
+        SaveManager.Save();
+        DrawName();
+    }
+
+    void DrawName()
+    {
+        if (SaveManager.state.name != "")
+            text_name.text = SaveManager.state.name;
+        else text_name.text = "your name";
+    }
 
     // Update is called once per frame
     void Update()
@@ -59,7 +116,7 @@ public class blokus_logo : MonoBehaviour
 
         Vector3 v = transform.eulerAngles;
 
-        v.z = Mathf.Sin(Time.time* sinSpeedZ) * sinZ + sinOffSetZ;
+        v.z = Mathf.Sin(Time.time * sinSpeedZ) * sinZ + sinOffSetZ;
         v.x = Mathf.Sin(Time.time * sinSpeedX) * sinX + sinOffSetX;
         v.y = Mathf.Sin(Time.time * sinSpeedY) * sinY + sinOffSetY;
 
@@ -76,7 +133,7 @@ public class blokus_logo : MonoBehaviour
         vol = GetVolume(2);
         Vector3 zs = visAudio1.transform.localScale;
         max1 = Mathf.Max(max1, vol);
-        vol = vol* (1.0f/max1);
+        vol = vol * (1.0f / max1);
         if (vol > zs.y)
         {
             zs.y = vol;
@@ -143,12 +200,12 @@ public class blokus_logo : MonoBehaviour
         sound.GetSpectrumData(samples, 0, FFTWindow.Rectangular);
 
         float a = 0;
-       // foreach (float s in samples)
+        // foreach (float s in samples)
 
-        for (int i = (int)((((float)samples_count) / 3.0f)* (float)chanel); i < (int)((((float)samples_count) / 3.0f) * (float)(1+chanel)); i++)
+        for (int i = (int)((((float)samples_count) / 3.0f) * (float)chanel); i < (int)((((float)samples_count) / 3.0f) * (float)(1 + chanel)); i++)
         {
             a += Mathf.Sqrt(Mathf.Abs(samples[i]));
-                //Mathf.Abs(samples[i]) * Mathf.Abs(samples[i]);
+            //Mathf.Abs(samples[i]) * Mathf.Abs(samples[i]);
         }
         return a / samples_count;
     }

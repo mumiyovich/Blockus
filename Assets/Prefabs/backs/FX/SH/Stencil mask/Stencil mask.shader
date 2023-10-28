@@ -72,7 +72,8 @@ Shader "Pi/Stencil mask/Stencil mask"
 
                float4 col = tex2D(_MainTex, i.uv);
 
-               float c = (col.r+col.g+col.b)*0.333334;
+               //float c = (col.r+col.g+col.b)*0.333334;
+               float c = 0.3*col.r+0.59*col.g+0.11*col.b;
 
                //c = max(0, min(1,(c-_min)/(_max-_min)));
                c = smoothstep(_min,_max,c);

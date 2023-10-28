@@ -1,6 +1,8 @@
 using System;
 using UnityEngine;
 
+
+
 public static class SaveManager
 {
     private const string GAME_STATE_KEY = "save";
@@ -16,16 +18,20 @@ public static class SaveManager
     public static void Save()
     {
 
-        PlayerPrefs.SetString(GAME_STATE_KEY, state.Serialize());
-    }
+        PlayerPrefs.SetString(GAME_STATE_KEY, JsonUtility.ToJson(state));
+
+        // PlayerPrefs.SetString(GAME_STATE_KEY, state.Serialize());
+
+    }   
 
     public static void Load()
     {
 
         try
         {
-            State load_state = PlayerPrefs.GetString(GAME_STATE_KEY).Deserialize<State>();
-            Action<State, State> map = MapperFactory.CreateMapper<State, State>();
+            State load_state = JsonUtility.FromJson<State>(PlayerPrefs.GetString(GAME_STATE_KEY));
+            //State load_state = PlayerPrefs.GetString(GAME_STATE_KEY).Deserialize<State>();
+            Action <State, State> map = MapperFactory.CreateMapper<State, State>();
             map(load_state, state);
         }
         catch

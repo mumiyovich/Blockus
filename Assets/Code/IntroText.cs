@@ -1,15 +1,13 @@
-using System.Collections;
+
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
-using System;
+
 using Unity.Mathematics;
-using UnityEngine.SceneManagement;
+
 
 public class IntroText : MonoBehaviour
 {
-
-    // [SerializeField] private TMP_Text text;
 
     private TMP_Text text;
 
@@ -17,15 +15,7 @@ public class IntroText : MonoBehaviour
     [TextArea]
     [SerializeField]
     private List<string> lst_text = new List<string>();
-    /*
-    {
-        "12345\n" +
-        "abcd",
 
-        "asdfghjklqwert\n" +
-        "uuuurrrhhh"
-    };
-    */
 
     
 
@@ -71,6 +61,7 @@ public class IntroText : MonoBehaviour
         //Input.GetKeyUp(KeyCode.Space) || 
         if (Input.GetMouseButtonDown(0))
         {
+            /*
             if(((float)(Input.mousePosition.y) / (float)(Screen.height)) <  0.24f )
             {
                 StartGame();
@@ -79,9 +70,10 @@ public class IntroText : MonoBehaviour
             {
                 stop = false;
             }
+            */
 
+            stop = false;
 
-            
         }
 
         if (stop) return;
@@ -121,8 +113,5 @@ public class IntroText : MonoBehaviour
 
     }
 
-    public void StartGame()
-    {
-        SceneManager.LoadScene(1);
-    }
+
 }
