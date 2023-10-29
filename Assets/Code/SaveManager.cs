@@ -22,7 +22,31 @@ public static class SaveManager
 
         // PlayerPrefs.SetString(GAME_STATE_KEY, state.Serialize());
 
+        SaveCloud();
+
     }   
+
+    public async static void SaveCloud()
+    {
+        if (state.name == "")
+            return;
+
+        try
+        {
+
+            Cloud cloud = new Cloud();
+            UserCloudItem item;
+            item = new UserCloudItem();
+            item.name = state.name;
+            item.time = state.time;
+            item.score = state.score;
+            await cloud.SaveData(item);
+
+        }
+        catch { }
+    }
+
+
 
     public static void Load()
     {

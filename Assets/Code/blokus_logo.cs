@@ -38,6 +38,8 @@ public class blokus_logo : MonoBehaviour
 
     [SerializeField] private TextMeshProUGUI text_name;
 
+    
+
 
     private float max1 = 0;
     private float max2 = 0;

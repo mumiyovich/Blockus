@@ -32,7 +32,7 @@ Material:
     - _length: 0.612
     - _r1: 0.333
     - _r2: 0.494
-    - _smooth: 0.028
+    - _smooth: 0.006
     - _speed: 1
     - _speed1: 1.45
     - _speed2: 1

@@ -48,6 +48,12 @@ public struct RendererItem
 
 public static class StaticLib
 {
+
+    //public static bool is_connect { get;  set; }
+    public static bool is_connect = false;
+    //public string playerId { get; private set; }
+    public static string playerId = "";
+
     public static float SmoothedLerp(float i1, float i2, float t, SmoothType type)
     {
         float k = Smoothed(t, type);

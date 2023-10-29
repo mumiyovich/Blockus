@@ -6,6 +6,7 @@ using UnityEngine;
 using System;
 using System.Collections.Generic;
 using Unity.Services.CloudSave;
+using NUnit.Framework;
 
 
 
@@ -23,15 +24,15 @@ public class Cloud
     //private event Action OnGetData;
 
 
-    public bool is_connect { get; private set; }
 
-    public string playerId { get; private set; }
+
+
 
     public List<UserCloudItem> userCloudItems { get; private set; } = new List<UserCloudItem>();
 
-    public List<UserCloudItem> userItemsScore { get; private set; } = new List<UserCloudItem>();
-    public List<UserCloudItem> userItemsTime { get; private set; } = new List<UserCloudItem>();
-    public List<UserCloudItem> userItemsRating { get; private set; } = new List<UserCloudItem>();
+    public List<UserCloudItem> userItemsScore = new List<UserCloudItem>();
+    public List<UserCloudItem> userItemsTime = new List<UserCloudItem>();
+    public List<UserCloudItem> userItemsRating = new List<UserCloudItem>();
 
     public Cloud()
     {
@@ -42,42 +43,51 @@ public class Cloud
     public void SignOut()
     {
         AuthenticationService.Instance.SignOut();
-        is_connect = false;
+        StaticLib.is_connect = false;
     }
 
-    public async Task SignIn()
+    public async Task<bool> SignIn()
     {
 
 
-        if (is_connect)
-            return;
+        if (StaticLib.is_connect)
+            return true;
 
         try
         {
             await UnityServices.InitializeAsync();
             AuthenticationService.Instance.SignInFailed += s => { Debug.Log("!!! " + s); };
             await AuthenticationService.Instance.SignInWithUsernamePasswordAsync(USERNAME, PASSWORD);
-            playerId = AuthenticationService.Instance.PlayerId;
-            is_connect = true;
+            StaticLib.playerId = AuthenticationService.Instance.PlayerId;
+            StaticLib.is_connect = true;
         }
         catch
-        { }
+        {
+            //Debug.Log("try");
+            return false;
+        }
+
+        return true;
 
     }
 
     //***********************************************************************
     public async Task GetData(Action OnGetData)
     {
-        await SignIn();
+        if (!await SignIn())
+            return;
 
         //await AuthenticationService.Instance.SignInAnonymouslyAsync();
         //await AuthenticationService.Instance.AddUsernamePasswordAsync(USERNAME, PASSWORD);
         //await AuthenticationService.Instance.UpdatePasswordAsync(currentPassword, newPassword);
         //await AuthenticationService.Instance.DeleteAccountAsync();
         //await AuthenticationService.Instance.SignUpWithUsernamePasswordAsync(USERNAME, PASSWORD);
-
-        await GetDataToList();
-        if (OnGetData != null) OnGetData();
+        try
+        {
+            await GetDataToList();
+            if (OnGetData != null) OnGetData();
+        }
+        catch { }
 
     }
 
@@ -97,11 +107,12 @@ public class Cloud
         SortLists();
     }
 
-    public void SortLists()
+    public async void SortLists()
     {
         userItemsScore = new List<UserCloudItem>(userCloudItems);
         userItemsTime = new List<UserCloudItem>(userCloudItems);
         userItemsRating = new List<UserCloudItem>(userCloudItems);
+
 
         userItemsScore.Sort(delegate (UserCloudItem x, UserCloudItem y)
         {
@@ -118,7 +129,67 @@ public class Cloud
             return y.GetRating().CompareTo(x.GetRating());
         });
 
+        List<UserCloudItem> del = new List<UserCloudItem>();
+        CropList(userItemsScore, ref del);
+        CropList(userItemsTime, ref del);
+        CropList(userItemsRating, ref del);
 
+        ClearDelList(userItemsScore, ref del);
+        ClearDelList(userItemsTime, ref del);
+        ClearDelList(userItemsRating, ref del);
+
+        foreach (UserCloudItem item in del)
+        {
+            await DeleteData(item);
+        }
+
+
+
+    }
+
+    void ClearDelList(List<UserCloudItem> list, ref List<UserCloudItem> del)
+    {
+        List<UserCloudItem> idl = new List<UserCloudItem>();
+        string id, nam;
+        for (int i = 0; i < del.Count; i++)
+        {
+            id = del[i].id;
+            nam = del[i].name;
+            UserCloudItem it = list.Find(x => x.id == id && x.name == nam);
+            if (it != null)
+            {
+                idl.Add(del[i]);
+            }
+        }
+
+        foreach (UserCloudItem i in idl)
+        {
+            del.Remove(i);
+        }
+    }
+
+    void CropList(List<UserCloudItem> list, ref List<UserCloudItem> del)
+    {
+        while (list.Count > 99)
+        {
+            del.Add(list[99]);
+            list.RemoveAt(99);
+        }
+    }
+
+    //******************************************************************************************
+
+    public async Task DeleteData(UserCloudItem item)
+    {
+        if (!await SignIn())
+            return;
+
+        string key = StaticLib.playerId + "_" + item.name.Replace(" ", "_");
+        try
+        {
+            await CloudSaveService.Instance.Data.Player.DeleteAsync(key);
+        }
+        catch { }
 
     }
 
@@ -126,19 +197,23 @@ public class Cloud
 
     public async Task SaveData(UserCloudItem item, Action OnSaveData = null)
     {
-        await SignIn();
+        if (!await SignIn())
+            return;
         await SaveDataToCloud(item);
         if (OnSaveData != null) OnSaveData();
     }
 
     async Task SaveDataToCloud(UserCloudItem item)
     {
-        string key = playerId + "_" + item.name.Replace(" ","_");
-        item.id = playerId;
+        string key = StaticLib.playerId + "_" + item.name.Replace(" ", "_");
+        item.id = StaticLib.playerId;
         var data = new Dictionary<string, object> { { key, item } };
+        try
+        {
+            await CloudSaveService.Instance.Data.Player.SaveAsync(data);
+        }
+        catch { }
 
-        await CloudSaveService.Instance.Data.Player.SaveAsync(data);
-  
         //await CloudSaveService.Instance.Data.Player.DeleteAsync("key2");
 
     }
@@ -147,7 +222,8 @@ public class Cloud
 
     public async Task ClearData(Action OnClearData = null)
     {
-        await SignIn();
+        if (!await SignIn())
+            return;
         await ClearDataToCloud();
         if (OnClearData != null) OnClearData();
     }
@@ -155,17 +231,20 @@ public class Cloud
     async Task ClearDataToCloud()
     {
         userCloudItems.Clear();
-
-        await CloudSaveService.Instance.Data.Player.DeleteAllAsync();
+        try
+        {
+            await CloudSaveService.Instance.Data.Player.DeleteAllAsync();
+        }
+        catch { }
 
     }
 
 }
 
-public struct UserCloudItem
+public class UserCloudItem
 {
-    public string name;
-    public string id;
+    public string name = "";
+    public string id = "";
     public int time;
     public int score;
 

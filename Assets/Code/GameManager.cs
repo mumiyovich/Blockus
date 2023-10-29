@@ -376,7 +376,7 @@ public class GameManager : MonoBehaviour
 
         if (Input.GetKeyUp(KeyCode.Escape))
         {
-            SaseState();
+            //SaseState();
             SceneManager.LoadScene(0);
         }
 

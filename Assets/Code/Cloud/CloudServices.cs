@@ -47,12 +47,12 @@ public class CloudServices : MonoBehaviour
     // Start is called before the first frame update
     async void Start()
     {
-        // await cloud.ClearData();
+         //await cloud.ClearData();
         // await cloud.GetData(OnGetData);
 
-        /*
+       /*
         UserCloudItem item;
-        for (int i = 0; i < 100; i++)
+        for (int i = 0; i < 99; i++)
         {
             item = new UserCloudItem();
             item.name = "Name " + (i.ToString("D2"));
@@ -98,8 +98,8 @@ public class CloudServices : MonoBehaviour
         {
 
 
-            // if (i.name == SaveManager.state.name && i.id == cloud.playerId)
-            if (i.name =="Name 50")
+            if (i.name == SaveManager.state.name && i.id == StaticLib.playerId)
+            //if (i.name =="Name 50")
              {
                 ni = n;
 
@@ -111,7 +111,7 @@ public class CloudServices : MonoBehaviour
             }
 
 
-            GameObject copy = AddItem(i, sel);
+            GameObject copy = AddItem(i,n+1, sel);
             n++;
         }
 
@@ -169,10 +169,13 @@ public class CloudServices : MonoBehaviour
         StartCoroutine(MoveSel());
     }
 
-    private GameObject AddItem(UserCloudItem item, bool selected = false)
+    private GameObject AddItem(UserCloudItem item, int num, bool selected = false)
     {
         //StaticLib.TimeSecToStr(state.time)
         GameObject copy = Instantiate(itemTemplate);
+
+        TextMeshProUGUI tnum = copy.transform.Find("Text N").GetComponent<TextMeshProUGUI>();
+        tnum.text = num.ToString("D2");
 
         TextMeshProUGUI tn = copy.transform.Find("Text Name").GetComponent<TextMeshProUGUI>();
         tn.text = item.name;
@@ -212,7 +215,10 @@ public class CloudServices : MonoBehaviour
             bSortOld = butSortRating;
 
         if (b == bSortOld)
+        {
+            FindYouname();
             return;
+        }
 
         bSortOld = b;
 
