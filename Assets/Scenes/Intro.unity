@@ -566,7 +566,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Update
+  m_text: Download new version
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1258,7 +1258,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &829006192
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1276,8 +1276,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -21, y: -27.000061}
-  m_SizeDelta: {x: 160, y: 30}
+  m_AnchoredPosition: {x: -60, y: -52}
+  m_SizeDelta: {x: 310.9599, y: 30}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &829006193
 MonoBehaviour:
@@ -7547,9 +7547,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b59358eee2310b45810bdbe47214d17, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  button: {fileID: 829006191}
   _url_inf: https://www.dropbox.com/scl/fi/5euxz4tzc75adcvlx3932/info.txt?rlkey=axz882cxd9bsoei72w6trhl5g&dl=1
-  _version: 
-  _apk_url: https://www.dropbox.com/scl/fi/pueaf6lkus6nw9hmz6f7m/Blockus.apk?rlkey=n3h3bqs2ip86ewb2j382k9dvx&dl=1
+  _version: 0.1.12
 --- !u!1 &1489945679
 GameObject:
   m_ObjectHideFlags: 0

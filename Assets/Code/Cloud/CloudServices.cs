@@ -47,20 +47,20 @@ public class CloudServices : MonoBehaviour
     // Start is called before the first frame update
     async void Start()
     {
-         //await cloud.ClearData();
+        //await cloud.ClearData();
         // await cloud.GetData(OnGetData);
 
-       /*
-        UserCloudItem item;
-        for (int i = 0; i < 99; i++)
-        {
-            item = new UserCloudItem();
-            item.name = "Name " + (i.ToString("D2"));
-            item.time = (int)((float)(i*3+1)/100.0f * 7200.0f);
-            item.score = (i+1)*10;
-            await cloud.SaveData(item);
-        }
-        //*/
+        /*
+         UserCloudItem item;
+         for (int i = 0; i < 99; i++)
+         {
+             item = new UserCloudItem();
+             item.name = "Name " + (i.ToString("D2"));
+             item.time = (int)((float)(i*3+1)/100.0f * 7200.0f);
+             item.score = (i+1)*10;
+             await cloud.SaveData(item);
+         }
+         //*/
 
         await cloud.GetData(OnGetData);
 
@@ -96,22 +96,16 @@ public class CloudServices : MonoBehaviour
         float ni = -1;
         foreach (UserCloudItem i in list)
         {
-
-
             if (i.name == SaveManager.state.name && i.id == StaticLib.playerId)
-            //if (i.name =="Name 50")
-             {
+            {
                 ni = n;
-
                 sel = true;
             }
             else
             {
                 sel = false;
             }
-
-
-            GameObject copy = AddItem(i,n+1, sel);
+            GameObject copy = AddItem(i, n + 1, sel);
             n++;
         }
 
@@ -121,21 +115,17 @@ public class CloudServices : MonoBehaviour
         }
         else
         {
-
-
             float h = itemTemplate.GetComponent<RectTransform>().rect.height;
             float sp = content.GetComponent<VerticalLayoutGroup>().spacing;
             float sh = scroll.GetComponent<RectTransform>().rect.height;
             float y = h * ni + h / 2 + sp * ni - sh / 2;
             float m = h * (n - 1) + h + sp * (n - 1) - sh;
-            y = Mathf.Max(y, 0);
+
             y = Mathf.Min(y, m);
+            y = Mathf.Max(y, 0);
 
             _pos_sel = y;
         }
-
-       
-
         wait.SetActive(false);
 
         FindYouname();
@@ -143,6 +133,9 @@ public class CloudServices : MonoBehaviour
 
     IEnumerator MoveSel()
     {
+
+
+
         float t = 0;
 
         RectTransform rt = content.GetComponent<RectTransform>();

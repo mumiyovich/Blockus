@@ -901,6 +901,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sec_scor_add_end: 1
   state:
+    _name: Pinkmann
     _time: 0
     _score: 0
     _score_diff: 0
@@ -1118,7 +1119,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sprite_on: {fileID: 21300000, guid: 5b3c316a16a380d419fc789c9cea21db, type: 3}
   sprite_off: {fileID: 21300000, guid: 848c41e317b598e45b6eb875fe46af43, type: 3}
-  on: 0
+  on: 1
 --- !u!1 &377547239
 GameObject:
   m_ObjectHideFlags: 0
