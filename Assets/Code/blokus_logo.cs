@@ -32,13 +32,12 @@ public class blokus_logo : MonoBehaviour
     [SerializeField] private GameObject visAudio2;
     [SerializeField] private GameObject visAudio3;
 
-    [SerializeField] private GameObject hiScores;
 
-    [SerializeField] private GameObject EnterName;
 
-    [SerializeField] private TextMeshProUGUI text_name;
 
-    
+    [SerializeField] private GameObject mineMenu;
+    [SerializeField] private GameObject infoPage;
+
 
 
     private float max1 = 0;
@@ -56,61 +55,18 @@ public class blokus_logo : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        DrawName();
+        
 
         samples = new float[samples_count];
     }
 
-    public void StartNewGame()
-    {
-        SaveManager.Clear();
-        SceneManager.LoadScene(1);
-    }
 
-    public void ContinueGame()
-    {
-        SceneManager.LoadScene(1);
-    }
 
-    public void HiScores()
-    {
-        if (SaveManager.state.name != "")
-        {
-            Instantiate(hiScores);
-            return;
-        }
 
-        GameObject estr = Instantiate(EnterName);
-        EnterString escr = estr.GetComponent<EnterString>();
-        escr.OnEnter = HiScoresEnterName;
-    }
 
-    public void HiScoresEnterName()
-    {
-        SaveManager.Save();
-        DrawName();
-        HiScores();
-    }
+ 
 
-    public void ChangeName()
-    {
-        GameObject estr = Instantiate(EnterName);
-        EnterString escr = estr.GetComponent<EnterString>();
-        escr.OnEnter = ChangeEnd;
-    }
 
-    public void ChangeEnd()
-    {
-        SaveManager.Save();
-        DrawName();
-    }
-
-    void DrawName()
-    {
-        if (SaveManager.state.name != "")
-            text_name.text = SaveManager.state.name;
-        else text_name.text = "your name";
-    }
 
     // Update is called once per frame
     void Update()

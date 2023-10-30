@@ -1,0 +1,8 @@
+{
+	"version":"0.1.14",
+	"urls":
+	[
+			"https://www.dropbox.com/scl/fi/pueaf6lkus6nw9hmz6f7m/Blockus.apk?rlkey=n3h3bqs2ip86ewb2j382k9dvx&dl=1",
+			"https://drive.google.com/uc?export=download&id=10Y4I4THbpGZsCgEMTFkCjCJowuBTVdyY"
+	]
+}

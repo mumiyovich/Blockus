@@ -11,7 +11,10 @@ public class IntroText : MonoBehaviour
 
     private TMP_Text text;
 
-   // [Multiline]
+    [SerializeField] private GameObject mainMenu;
+    [SerializeField] private GameObject root;
+
+    // [Multiline]
     [TextArea]
     [SerializeField]
     private List<string> lst_text = new List<string>();
@@ -30,6 +33,15 @@ public class IntroText : MonoBehaviour
     [SerializeField] private float sinSpeedX;
     [SerializeField] private float sinSpeedY;
     private float offSetY;
+
+    public void MainMenu()
+    {
+
+        GameObject new_back = (Instantiate(mainMenu) as GameObject);
+
+        Destroy(root);
+
+    }
 
     // Start is called before the first frame update
     void Start()

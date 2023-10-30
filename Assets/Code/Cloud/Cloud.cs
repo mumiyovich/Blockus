@@ -58,7 +58,7 @@ public class Cloud
             await UnityServices.InitializeAsync();
             AuthenticationService.Instance.SignInFailed += s => { Debug.Log("!!! " + s); };
             await AuthenticationService.Instance.SignInWithUsernamePasswordAsync(USERNAME, PASSWORD);
-            StaticLib.playerId = AuthenticationService.Instance.PlayerId;
+            StaticLib.playerId_dev = SystemInfo.deviceUniqueIdentifier;// AuthenticationService.Instance.PlayerId;
             StaticLib.is_connect = true;
         }
         catch
@@ -184,7 +184,10 @@ public class Cloud
         if (!await SignIn())
             return;
 
-        string key = StaticLib.playerId + "_" + item.name.Replace(" ", "_");
+        string key = item.id + "_" + item.name.Replace(" ", "_");
+
+        //string key = StaticLib.playerId_dev + "_" + item.name.Replace(" ", "_");
+        
         try
         {
             await CloudSaveService.Instance.Data.Player.DeleteAsync(key);
@@ -205,8 +208,8 @@ public class Cloud
 
     async Task SaveDataToCloud(UserCloudItem item)
     {
-        string key = StaticLib.playerId + "_" + item.name.Replace(" ", "_");
-        item.id = StaticLib.playerId;
+        string key = StaticLib.playerId_dev + "_" + item.name.Replace(" ", "_");
+        item.id = StaticLib.playerId_dev;
         var data = new Dictionary<string, object> { { key, item } };
         try
         {

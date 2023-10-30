@@ -13,6 +13,9 @@ using UnityEngine.UI;
 public class CloudServices : MonoBehaviour
 {
 
+    [SerializeField]
+    private bool admin;
+
     [SerializeField] private TextMeshProUGUI text_tmp;
 
 
@@ -96,7 +99,7 @@ public class CloudServices : MonoBehaviour
         float ni = -1;
         foreach (UserCloudItem i in list)
         {
-            if (i.name == SaveManager.state.name && i.id == StaticLib.playerId)
+            if (i.name == SaveManager.state.name && i.id == StaticLib.playerId_dev)
             {
                 ni = n;
                 sel = true;
@@ -164,8 +167,16 @@ public class CloudServices : MonoBehaviour
 
     private GameObject AddItem(UserCloudItem item, int num, bool selected = false)
     {
+
+
+       
         //StaticLib.TimeSecToStr(state.time)
         GameObject copy = Instantiate(itemTemplate);
+
+        copy.GetComponentInChildren<ButtunDelCloudItem>().item = item;
+
+        copy.transform.Find("ButtonDel").gameObject.SetActive(admin);
+
 
         TextMeshProUGUI tnum = copy.transform.Find("Text N").GetComponent<TextMeshProUGUI>();
         tnum.text = num.ToString("D2");

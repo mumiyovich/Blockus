@@ -39,11 +39,13 @@ public class PiWWW : MonoBehaviour
 
     [SerializeField] private GameObject button;
 
+    /*
     [SerializeField]
     private string _url_inf;
 
     [SerializeField]
     private string _version;
+    */
 
 
     private string _apk_url;
@@ -74,7 +76,7 @@ public class PiWWW : MonoBehaviour
 
     IEnumerator LoadInfo()
     {
-        using (UnityWebRequest webRequest = UnityWebRequest.Get(_url_inf))
+        using (UnityWebRequest webRequest = UnityWebRequest.Get(Version.inst._url_inf))
         {
 
             yield return webRequest.SendWebRequest();
@@ -104,7 +106,7 @@ public class PiWWW : MonoBehaviour
     bool VersinOk(string new_v)
     {
 
-        string[] cv = _version.Split('.');
+        string[] cv = Version.inst._version.Split('.');
         string[] nv = new_v.Split('.');
 
         int com = math.max(cv.Length, nv.Length);
