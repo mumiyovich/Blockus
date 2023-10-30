@@ -269,7 +269,7 @@ public class GameManager : MonoBehaviour
     void DrFPS()
     {
 
-        int fps = (int)(1.0f / Time.deltaTime + 0.5f);
+        int fps = (int)(1.0f / Time.unscaledDeltaTime + 0.5f);
 
         if (fps > 800)
             return;
@@ -279,7 +279,7 @@ public class GameManager : MonoBehaviour
 
 
 
-        fps_tim_avr += Time.deltaTime;
+        fps_tim_avr += Time.unscaledDeltaTime;
 
         if (fps_tim_avr >= 5.0f)
         {
