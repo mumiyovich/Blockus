@@ -38,6 +38,7 @@ public class PiWWW : MonoBehaviour
 {
 
     [SerializeField] private GameObject button;
+    [SerializeField] private TextMeshProUGUI text_v;
 
     /*
     [SerializeField]
@@ -55,6 +56,8 @@ public class PiWWW : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+
+        text_v.text = Version.inst._version;
         /*
         BlockusInfo bi = new BlockusInfo();
         bi.version = "1.02.3";
@@ -96,6 +99,8 @@ public class PiWWW : MonoBehaviour
             _apk_url = bi.urls[0].Trim();
 
             button.SetActive(true);
+
+            text_v.gameObject.SetActive(false);
         }
 
         

@@ -35,7 +35,7 @@ public class BlockNode : MonoBehaviour
     [SerializeField] private float priz_speed;
     private int cur_priz = 0;
 
-    private float rotate_seed = 0;
+
 
     public Rigidbody rb;
 
@@ -45,6 +45,10 @@ public class BlockNode : MonoBehaviour
     private Material currentMat;
 
     private float scale = 0;
+
+
+    private BlockRotateParams blockRotateParams;
+    private float rotateSeed = 0;
 
 
 
@@ -62,11 +66,29 @@ public class BlockNode : MonoBehaviour
     void Start()
     {
 
+        // rotate param
+
+        rotateSeed = ((float)UnityEngine.Random.Range(0, 1001)) / 1001.0f * 6.28f;
+
+        BlockProps blockProps = GetComponentInChildren<BlockProps>();
+
+        if (blockProps != null)
+        {
+            blockRotateParams = blockProps.blockData.blockRotateParams;
+            blockRotateParams.rotateAxis = blockRotateParams.rotateAxis.normalized;
+        }
+        else
+        {
+            blockRotateParams = new BlockRotateParams();
+        }
+
+
+        ////////////////////////
         transform.localScale = new Vector3(0, 0, 0);
 
         scale = 0;
 
-        rotate_seed = ((float)UnityEngine.Random.Range(0, 1001)) / 1001.0f * 6.28f;
+        
 
         rb = GetComponent<Rigidbody>();
 
@@ -142,14 +164,13 @@ public class BlockNode : MonoBehaviour
 
 
 
-        Vector3 axis = new Vector3(0.5f, 1, 0).normalized;
-        float angle = Time.time * 30.0f;
 
-        angle = math.sin(Time.time * 0.6f + rotate_seed) * 90.0f;
 
-        Quaternion q = Quaternion.AngleAxis(angle, axis);
-
+        float angle = math.sin(Time.time * blockRotateParams.rotateSpeed + rotateSeed) * blockRotateParams.rotateAngle;
+        Quaternion q = Quaternion.AngleAxis(angle, blockRotateParams.rotateAxis);
         meshes.transform.rotation = q;
+
+
 
     }
 

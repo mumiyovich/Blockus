@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 688de121a5c4e174688eef0233e7cd51, type: 3}
+  m_Name: Block num
+  m_EditorClassIdentifier: 
+  blockRotateParams:
+    rotateAxis: {x: 0.24253564, y: 0.97014254, z: 0}
+    rotateAngle: 45
+    rotateSpeed: 2.5

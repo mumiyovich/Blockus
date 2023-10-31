@@ -218,7 +218,6 @@ public class Cloud
         catch { }
 
         //await CloudSaveService.Instance.Data.Player.DeleteAsync("key2");
-
     }
 
     //**************************************************************************************

@@ -24,7 +24,8 @@ public static class SaveManager
 
         SaveCloud();
 
-    }   
+    }
+
 
     public async static void SaveCloud()
     {
@@ -41,10 +42,11 @@ public static class SaveManager
             item.time = state.time;
             item.score = state.score;
             await cloud.SaveData(item);
-
         }
         catch { }
     }
+
+
 
 
 
@@ -55,7 +57,7 @@ public static class SaveManager
         {
             State load_state = JsonUtility.FromJson<State>(PlayerPrefs.GetString(GAME_STATE_KEY));
             //State load_state = PlayerPrefs.GetString(GAME_STATE_KEY).Deserialize<State>();
-            Action <State, State> map = MapperFactory.CreateMapper<State, State>();
+            Action<State, State> map = MapperFactory.CreateMapper<State, State>();
             map(load_state, state);
         }
         catch

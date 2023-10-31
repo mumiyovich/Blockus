@@ -938,6 +938,17 @@ MonoBehaviour:
     - {fileID: 6384357869253325608, guid: 3c595e48c95a0fa46b1be0e50c8aa831, type: 3}
     - {fileID: 8183419459409359348, guid: bf2fced4b0fd01748a9e81db4b628994, type: 3}
     - {fileID: 624619473683325512, guid: fd05bbe0f57fe7e4ab5a6080dea7a040, type: 3}
+  - blocks:
+    - {fileID: 3880300344334851434, guid: 1100eca837bc6fa45818737fe8ae1589, type: 3}
+    - {fileID: 4340052782100107976, guid: 15d69511858938145a708b9043fa4685, type: 3}
+    - {fileID: 4750496753663318945, guid: 7c3b4126db03bbc46849ed715ce8581f, type: 3}
+    - {fileID: 5611729211632251420, guid: cb41a79e550176f42af69dfd8f32d322, type: 3}
+    - {fileID: 491777038614014363, guid: 79c7274657730e44f9b5337b5738f040, type: 3}
+    - {fileID: 5333031508784872389, guid: c2a29c182ad7d0e409c4614beaf5c10e, type: 3}
+    - {fileID: 1489319914591627112, guid: 2df31932bbc21464db4e02d2165366e2, type: 3}
+    - {fileID: 5641679605490319181, guid: e3d8d22e4a572ce41ab342a2bcf49877, type: 3}
+    - {fileID: 7210740679414424972, guid: ebc4f2305289b9f4c9e6753dc445768b, type: 3}
+    - {fileID: 104956435280838401, guid: 0aa5dad3043f4514fb54efb1c172f6b0, type: 3}
   text_tmp: {fileID: 163751524}
   text_score: {fileID: 1785387054}
   text_time: {fileID: 716498583}
@@ -1390,7 +1401,7 @@ SpringJoint:
   m_ConnectedArticulationBody: {fileID: 0}
   m_Anchor: {x: -0.5, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: -2.3, y: -2.97, z: 0}
+  m_ConnectedAnchor: {x: -2.3, y: 0.27, z: 0}
   serializedVersion: 2
   m_Spring: 10
   m_Damper: 0.2
@@ -1441,7 +1452,7 @@ SpringJoint:
   m_ConnectedArticulationBody: {fileID: 0}
   m_Anchor: {x: 0.5, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: 2.3, y: -2.97, z: 0}
+  m_ConnectedAnchor: {x: 2.3, y: 0.27, z: 0}
   serializedVersion: 2
   m_Spring: 10
   m_Damper: 0.2

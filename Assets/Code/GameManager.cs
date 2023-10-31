@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 //using System.Collections;
 using System.Collections.Generic;
+
 //using System.Linq;
 //using System.Drawing;
 using TMPro;
@@ -192,21 +193,29 @@ public class GameManager : MonoBehaviour
 
     private void OnDestroy()
     {
-        SaseState();
+        SaveState();
     }
     private void OnApplicationFocus(bool focus)
     {
-        SaseState();
+        if (!focus)
+        {
+            SaveState();
+        }
     }
     private void OnApplicationPause(bool pause)
     {
-        SaseState();
+        if (pause)
+        {
+            SaveState();
+        }
     }
 
-    void SaseState()
+
+    void SaveState()
     {
         SaveManager.Save();
     }
+    
 
     void InitXLines()
     {
@@ -372,6 +381,10 @@ public class GameManager : MonoBehaviour
         if (Input.GetKeyUp(KeyCode.A))
         {
             backPanel.NewBack();
+        }
+        if (Input.GetKeyUp(KeyCode.S))
+        {
+            NextLevel();
         }
 
         if (Input.GetKeyUp(KeyCode.Escape))
@@ -659,6 +672,9 @@ public class GameManager : MonoBehaviour
 
         //DrawScore();
 
+
+        SaveManager.SaveCloud();//!!!!!!!!!!!!!!!!
+
     }
 
     private void StartScorePoint(int n, Vector3 pos, Color color)
@@ -798,6 +814,9 @@ public class GameManager : MonoBehaviour
     private void CheckTap()
     {
         Vector3 p = MouseToScren();
+
+        if (start_y_block - p.y < 0.5f)
+            return;
 
         Transform t1 = null;
         Transform t2 = null;
