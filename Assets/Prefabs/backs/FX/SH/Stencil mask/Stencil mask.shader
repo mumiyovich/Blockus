@@ -27,6 +27,7 @@ Shader "Pi/Stencil mask/Stencil mask"
                  Comp Always
                  Pass Replace
             }
+            
 
             CGPROGRAM
             #pragma vertex vert

@@ -41,6 +41,7 @@ public class BackPanel : MonoBehaviour
 
         NewBack();
     }
+    
 
 
     void Update()

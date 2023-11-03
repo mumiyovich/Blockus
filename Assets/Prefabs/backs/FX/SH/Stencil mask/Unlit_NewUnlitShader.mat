@@ -35,7 +35,7 @@ Material:
     - _balance: 0.671
     - _count: 1.33
     - _dither64: 1
-    - _dither_ord: 3
+    - _dither_ord: 0
     - _k_y: 0.1
     - _max: 1
     - _min: 0
