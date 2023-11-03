@@ -14,6 +14,7 @@ Material:
   m_ValidKeywords: []
   m_InvalidKeywords:
   - _DITHER64_ON
+  - _USE_DITHER_ON
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -31,9 +32,10 @@ Material:
     m_Ints:
     - _count: 1
     m_Floats:
-    - _balance: 0.5
+    - _balance: 0.671
     - _count: 1.33
     - _dither64: 1
+    - _dither_ord: 3
     - _k_y: 0.1
     - _max: 1
     - _min: 0
@@ -41,8 +43,8 @@ Material:
     - _s: -1.57
     - _speed: 14
     - _step: 0
-    - _texel_size: 20.8
+    - _texel_size: 0
     - _time: 0
-    - _use_dither: 0
+    - _use_dither: 1
     m_Colors: []
   m_BuildTextureStacks: []

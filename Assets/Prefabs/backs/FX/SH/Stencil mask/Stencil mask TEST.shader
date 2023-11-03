@@ -12,6 +12,9 @@ Shader "Pi/Stencil mask/Stencil mask TEST"
         _balance("Balance",Range(0,1))=0.5
 
         [Toggle] _use_dither("Use dither",int)=0
+		
+		_dither_ord("Dither ord",int)=1
+		
         [Toggle] _dither64("Dither 64 (false = 16)",int)=0
         _texel_size("Texel size (width resolution, 0 = auto)",float)=0
     }
@@ -27,6 +30,8 @@ Shader "Pi/Stencil mask/Stencil mask TEST"
         */
         Pass
         {
+		
+
             CGPROGRAM
             #pragma vertex vert
             #pragma fragment frag
@@ -104,6 +109,41 @@ Shader "Pi/Stencil mask/Stencil mask TEST"
                uint index = (uint(uv.x * _texel_size) % 8 + uint(uv.y * _texel_size ) % 8 * 8);
                return step(DITHER_THRESHOLDS[index],color);
            }
+		   
+		   
+	int _dither_ord;	   
+		    uint bayer(uint x, uint y, uint order)
+ {
+     uint res = 0;
+     for (uint i = 0; i < order; ++i)
+     {
+         uint xOdd_XOR_yOdd = (x & 1) ^ (y & 1);
+         uint xOdd = x & 1;
+         res = ((res << 1 | xOdd_XOR_yOdd) << 1) | xOdd;
+         x >>= 1;
+         y >>= 1;
+     }
+     return res;
+ }
+		   
+		   float ditherN(float2 uv, float color)
+           {
+			   if(_dither_ord<1)
+				   _dither_ord=1;
+			   
+			   int order =_dither_ord;
+			   //int dim = 8;
+			   int dim = 1 << order;
+			   
+			   uint index = (uint(uv.x * _texel_size) % dim + uint(uv.y * _texel_size ) % dim * dim);
+			   
+			   float r = bayer(index / dim, index % dim, order);
+			   
+			   float k = (r+1.0f)/(dim * dim + 1.0f);
+		   
+		   return step(k,color);
+			//return 1;
+		   }
 
             fixed4 frag (v2f i) : SV_Target
             {
@@ -151,6 +191,8 @@ Shader "Pi/Stencil mask/Stencil mask TEST"
 
                if(_use_dither)
                {
+					c = ditherN(i.uv, c);
+					/*
                    if(_dither64)
                    {
                         c = dither64(i.uv, c);
@@ -159,6 +201,7 @@ Shader "Pi/Stencil mask/Stencil mask TEST"
                    {
                         c = dither16(i.uv, c);
                    }
+				   */
                }
   
                //return fixed4(i.uv.x,i.uv.y,0,1);
