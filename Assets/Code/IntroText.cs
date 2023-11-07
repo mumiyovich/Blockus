@@ -61,6 +61,11 @@ public class IntroText : MonoBehaviour
     void Update()
     {
 
+        if (Input.GetKeyUp(KeyCode.Escape))
+        {
+            MainMenu();
+        }
+
 
         transform.position = new Vector3( 
             math.sin(Time.time * sinSpeedX) * sinW,
