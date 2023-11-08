@@ -9,6 +9,7 @@ using UnityEngine.SceneManagement;
 public class blokus_logo : MonoBehaviour
 {
 
+
     [SerializeField] private float sinX;
     [SerializeField] private float sinSpeedX;
     [SerializeField] private float sinOffSetX;
@@ -165,6 +166,12 @@ public class blokus_logo : MonoBehaviour
             a += Mathf.Sqrt(Mathf.Abs(samples[i]));
             //Mathf.Abs(samples[i]) * Mathf.Abs(samples[i]);
         }
+
+        if(a == 0)
+        {
+            return Random.Range(0,100);
+        }
+
         return a / samples_count;
     }
 }
