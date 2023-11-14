@@ -1,5 +1,6 @@
 
-using Pixeye.Unity;
+//using Pixeye.Unity;
+using NaughtyAttributes;
 using System;
 using System.Collections;
 //using System.Collections;
@@ -22,9 +23,14 @@ using UnityEngine.SceneManagement;
 //To format a selection: Ctrl + K, Ctrl + F
 //To format a document: Ctrl + K, Ctrl + D
 
+//https://dbrizov.github.io/na-docs
+
 
 public class GameManager : MonoBehaviour
 {
+
+
+
     private bool start = true;
     private float _cam_sh = 0;
     private float _k_cam = 0.1f;
@@ -47,48 +53,77 @@ public class GameManager : MonoBehaviour
     [HideInInspector] public Dictionary<GameObject, BlockNode> blocks_in_down = new Dictionary<GameObject, BlockNode>();
 
 
-    [Foldout("Particles:", true)]
+    //  [Foldout("Particles:", true)]
     //[Header("Particles:")]
+    [Foldout("Particles")]
     [SerializeField] private GameObject ParticleSwop;
+    [Foldout("Particles")]
     [SerializeField] private GameObject ParticleBoom;
+    [Foldout("Particles")]
     [SerializeField] private GameObject ParticleOk;
 
-    [Foldout("Objects:", true)]
+    //   [Foldout("Objects:", true)]
     //[Header("Objects:")]
+    [Foldout("Objects")]
+    [ShowAssetPreview]
     [SerializeField] private GameObject PanelPause;
+    [Foldout("Objects")]
+    [ShowAssetPreview]
     [SerializeField] private GameObject down_panel;
+    [Foldout("Objects")]
+    [ShowAssetPreview]
     [SerializeField] private GameObject StartSceneX;
+    [Foldout("Objects")]
+    [ShowAssetPreview]
     [SerializeField] private GameObject block;
+    [Foldout("Objects")]
+    [ShowAssetPreview]
     [SerializeField] private GameObject score_point;
+    [Foldout("Objects")]
+    [ShowAssetPreview]
     [SerializeField] private GameObject AllObgects;
+    [Foldout("Objects")]
+    [ShowAssetPreview]
     [SerializeField] private GameObject SolidBlock;
+    [Foldout("Objects")]
+    [ShowAssetPreview]
     [SerializeField] private GameObject Back_Panel;
 
 
     [System.Serializable]
     public struct Blocks_level
     {
+        //[ShowAssetPreview(16,16)]
+       [ShowAssetPreview]
         public List<GameObject> blocks;
     }
 
-    [Foldout("Objects blocks:", true)]
+ //   [Foldout("Objects blocks:", true)]
     // [Header("Objects blocks:")]
     [SerializeField] private List<Blocks_level> blocks_level;
 
-    [Foldout("Texts:", true)]
+    //   [Foldout("Texts:", true)]
     // [Header("Texts:")]
+    [Foldout("Texts")]
     [SerializeField] private TextMeshProUGUI text_tmp;
+    [Foldout("Texts")]
     [SerializeField] private TextMeshProUGUI text_score;
+    [Foldout("Texts")]
     [SerializeField] private TextMeshProUGUI text_time;
 
 
 
-    [Foldout("Blocks params:", true)]
+    //   [Foldout("Blocks params:", true)]
     // [Header("Blocks params:")]
+    [Foldout("Blocks params")]
     [SerializeField] private float start_y_block;
+    [Foldout("Blocks params")]
     [SerializeField] private float first_x_block;
+    [Foldout("Blocks params")]
     [SerializeField] private float last_x_block;
+    [Foldout("Blocks params")]
     [SerializeField] public float down_panel_height;
+    [Foldout("Blocks params")]
     [SerializeField] public float height_down_line;
     private float st_first_x_block;
     private float st_last_x_block;
@@ -123,20 +158,31 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    [Foldout("Difficult:", true)]
+    //   [Foldout("Difficult:", true)]
     //[Header("Difficult:")]
+    [Foldout("Difficult")]
     [SerializeField] private GameObject diff_progres;
     //   [SerializeField] private int leven_num = 0;
+    [Foldout("Difficult")]
     [SerializeField] private float min_gravity;
+    [Foldout("Difficult")]
     [SerializeField] private float max_gravity;
+    [Foldout("Difficult")]
     [SerializeField] private float _gravity;
+    [Foldout("Difficult")]
     [SerializeField] private int priz_var;
+    [Foldout("Difficult")]
     [SerializeField] private int solid_var;
     //   [SerializeField] private int lives;
+    [Foldout("Difficult")]
     [SerializeField] private float min_time_new_block;
+    [Foldout("Difficult")]
     [SerializeField] private float max_time_new_block;
+    [Foldout("Difficult")]
     [SerializeField] private float time_new_block;
+    [Foldout("Difficult")]
     [SerializeField] private int max_score;
+    [Foldout("Difficult")]
     [SerializeField] private float score_speed;
     //   [SerializeField] private float score_add = 0;//!
 
